@@ -4,13 +4,15 @@ import { useParams } from 'react-router-dom';
 
 import NameForm from '../components/NameForm';
 
-const socket = io.connect("http://localHOST:3001");
+const socket = io.connect("http://localhost:3001");
 
 function PokerSessionPage() {
 
     const { room } = useParams();
     const [username, setUsername] = useState("");
     const [userList, setUserList] = useState([]);
+    const [session, setSession] = useState(null);
+    const [testUserList, setTestUserList] = useState([])
     let nextId = 0;
 
     useEffect(() => {
@@ -36,7 +38,19 @@ function PokerSessionPage() {
             ...userList,
             {id: nextId++, name: name}
         ]);
+        fetchSession();
     };
+
+    const fetchSession = async () => {
+        try {
+            const response = await fetch(`/api/sessions/${room}`)
+            const json = await response.json()
+            setSession(json)
+            setTestUserList(json.participants)
+        } catch (error) {
+            console.error("Error fetching session details.")
+        }
+    }
 
     return (
         <div className="App">

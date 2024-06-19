@@ -7,7 +7,10 @@ const {Server} = require("socket.io");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+const sessionRoutes = require("./routes/sessions");
+
 app.use(cors());
+app.use(express.json());
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
@@ -15,6 +18,8 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     }
 });
+
+app.use("/api/sessions", sessionRoutes);
 
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
