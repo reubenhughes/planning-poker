@@ -9,20 +9,28 @@ const socket = io.connect("http://localhost:3001");
 function PokerSessionPage() {
 
     const { room } = useParams();
+    const [userID, setUserID] = useState("");
     const [username, setUsername] = useState("");
     const [userList, setUserList] = useState([]);
     const [session, setSession] = useState("");
 
     useEffect(() => {
-        socket.on('user_joined', (data) => {
-            alert(`User ${data.name} joined room: ${data.room}`);
+
+        const handleUserJoined = (data) => {
             setUserList((prevUserList) => [
                 ...prevUserList,
                 { id: data.userID, name: data.name }
             ]);
-        });
+        }
+
+        socket.on('user_joined', handleUserJoined)
+
         socket.on('receive_message', (data) => {
         });
+
+        return () => {
+            socket.off('user_joined', handleUserJoined)
+        }
     }, [socket]);
 
     socket.onClose = () => {
@@ -30,9 +38,6 @@ function PokerSessionPage() {
     };
 
     const handleJoin = async (name) => {
-        socket.emit('join_room', { name, room });
-        setUsername(name);
-
         const response = await fetch("http://localhost:3001/api/sessions/addUser", {
             method: "POST",
             body: JSON.stringify({ sessionID: room, name, vote: '0' }),
@@ -43,9 +48,11 @@ function PokerSessionPage() {
         const json = await response.json();
 
         if (response.ok) {
-            setSession(json);
-            setUserList(json.votes.map((user) => ({ id: user.userID, name: user.name })));
-            console.log(json.votes);
+            setSession(json.session);
+            setUsername(name);
+            setUserID(json.userID);
+            setUserList(json.session.votes.map((user) => ({ id: user.userID, name: user.name })));
+            socket.emit('join_room', { name, room, userID: json.userID });
         } else {
             console.error('Failed to join session: ', json);
         }
@@ -55,6 +62,7 @@ function PokerSessionPage() {
         <div className="App">
             <NameForm onJoin={handleJoin} />
             <h2>Room: {room}</h2>
+            <h2>name Test: {userID}</h2>
             <ol>
                 {userList.map((user) => (
                     <li key={user.id}>{user.name}</li>

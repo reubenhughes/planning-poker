@@ -68,7 +68,7 @@ const addUserToSession = async (req, res) => {
             session.votes.push(participantVote);
             await session.save();
         }
-        res.status(200).json(session);
+        res.status(200).json({ session: session, userID: userID });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Server error" });
