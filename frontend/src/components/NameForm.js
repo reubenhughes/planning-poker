@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-function NameForm( { onJoin }) {
+function NameForm({ onJoin }) {
   const [open, setOpen] = React.useState(true);
 
   const handleSubmit = (name) => {

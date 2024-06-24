@@ -1,4 +1,5 @@
 const Session = require("../models/SessionSchema");
+const Mongoose = require('mongoose');
 
 const getSession = async (req, res) => {
     const { id } = req.params;
@@ -7,7 +8,8 @@ const getSession = async (req, res) => {
         if (!session) {
             return res.status(404).json({ message: "Session not found" });
         }
-        res.json(session);
+        res.status(200).json(session);
+        console.log(`Fetched session ${id}`)
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }
@@ -27,12 +29,55 @@ const createSession = async (req, res) => {
             createdAt
         });
         res.status(200).json(session);
+        console.log(`Created session ${res.params}`);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
+const updateSession = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const session = await Session.findOneAndUpdate(
+            { _id: id },
+            {
+                ...req.body
+            }
+        )
+        res.status(200).json(session);
+        console.log(`Updated session ${id}`);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+        console.log(error);
+    }
+}
+
+const addUserToSession = async (req, res) => {
+    const { sessionID, name, vote } = req.body;
+    const userID = new Mongoose.Types.ObjectId();
+    const participantVote = { userID, name, vote };
+
+    try {
+        const session = await Session.findById(sessionID);
+        if (!session) {
+            return res.status(404).json({ message: "Session not found" });
+        }
+
+        if (!session.participants.includes(userID)) {
+            session.participants.push(userID);
+            session.votes.push(participantVote);
+            await session.save();
+        }
+        res.status(200).json(session);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
 module.exports = {
     getSession,
-    createSession
+    createSession,
+    updateSession,
+    addUserToSession
 };

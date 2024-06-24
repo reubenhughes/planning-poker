@@ -11,16 +11,14 @@ function PokerSessionPage() {
     const { room } = useParams();
     const [username, setUsername] = useState("");
     const [userList, setUserList] = useState([]);
-    const [session, setSession] = useState(null);
-    const [testUserList, setTestUserList] = useState([])
-    let nextId = 0;
+    const [session, setSession] = useState("");
 
     useEffect(() => {
         socket.on('user_joined', (data) => {
             alert(`User ${data.name} joined room: ${data.room}`);
-            setUserList([
-                ...userList,
-                {id: nextId++, name: data.name}
+            setUserList((prevUserList) => [
+                ...prevUserList,
+                { id: data.userID, name: data.name }
             ]);
         });
         socket.on('receive_message', (data) => {
@@ -31,26 +29,27 @@ function PokerSessionPage() {
         socket.emit('disconnect');
     };
 
-    const handleJoin = (name) => {
-        socket.emit('join_room', {name, room});
+    const handleJoin = async (name) => {
+        socket.emit('join_room', { name, room });
         setUsername(name);
-        setUserList([
-            ...userList,
-            {id: nextId++, name: name}
-        ]);
-        fetchSession();
-    };
 
-    const fetchSession = async () => {
-        try {
-            const response = await fetch(`/api/sessions/${room}`)
-            const json = await response.json()
-            setSession(json)
-            setTestUserList(json.participants)
-        } catch (error) {
-            console.error("Error fetching session details.")
+        const response = await fetch("http://localhost:3001/api/sessions/addUser", {
+            method: "POST",
+            body: JSON.stringify({ sessionID: room, name, vote: '0' }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const json = await response.json();
+
+        if (response.ok) {
+            setSession(json);
+            setUserList(json.votes.map((user) => ({ id: user.userID, name: user.name })));
+            console.log(json.votes);
+        } else {
+            console.error('Failed to join session: ', json);
         }
-    }
+    };
 
     return (
         <div className="App">
@@ -61,6 +60,9 @@ function PokerSessionPage() {
                     <li key={user.id}>{user.name}</li>
                 ))}
             </ol>
+            {session &&
+                <h3>{session.createdAt}</h3>
+            }
             <h3>Hello, {username}</h3>
         </div>
     );
