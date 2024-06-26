@@ -1,20 +1,20 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import * as React from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 function NameForm({ onJoin }) {
   const [open, setOpen] = React.useState(true);
 
   const handleSubmit = (name) => {
     if (name) {
-        setOpen(false);
-        onJoin(name);
-    };
+      setOpen(false);
+      onJoin(name);
+    }
   };
 
   return (
@@ -22,7 +22,7 @@ function NameForm({ onJoin }) {
       <Dialog
         open={open}
         PaperProps={{
-          component: 'form',
+          component: "form",
           onSubmit: (event) => {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
