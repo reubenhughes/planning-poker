@@ -75,9 +75,31 @@ const addUserToSession = async (req, res) => {
     }
 };
 
+
+const removeUserFromSession = async (req, res) => {
+    const {id, userID, session } = req.body;
+    const updatedParticipantList = session.participants.filter((participant) => participant !== userID)
+    const updatedVoteList = session.votes.filter((vote) => vote.userID !== userID)
+    try {
+        const updatedSession = await Session.findOneAndUpdate(
+            { _id: id },
+            {
+                participants: updatedParticipantList,
+                votes: updatedVoteList,
+                createdAt: session.createdAt
+            }
+        )
+        res.status(200).json(updatedSession)
+    } catch (error) {
+        res.status(400).json({ message: error.messsage})
+        console.log(error)
+    }
+}
+
 module.exports = {
     getSession,
     createSession,
     updateSession,
-    addUserToSession
+    addUserToSession,
+    removeUserFromSession
 };

@@ -31,9 +31,13 @@ io.on("connection", (socket) => {
         console.log(`User ${data.name} joined room: ${data.room}`);
         socket.to(data.room).emit("user_joined", data);
     });
-    socket.on('disconnect', () => {
+    socket.on('user_disconnect', () => {
         console.log('disconnected');
     });
+
+    socket.on('leave_room', (data) => {
+        console.log('user left');
+    })
 });
 
 mongoose

@@ -1,8 +1,9 @@
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import NameForm from '../components/NameForm';
+import ParticipantList from '../components/ParticipantList';
 
 const socket = io.connect("http://localhost:3001");
 
@@ -33,10 +34,6 @@ function PokerSessionPage() {
         }
     }, [socket]);
 
-    socket.onClose = () => {
-        socket.emit('disconnect');
-    };
-
     const handleJoin = async (name) => {
         const response = await fetch("http://localhost:3001/api/sessions/addUser", {
             method: "POST",
@@ -58,20 +55,33 @@ function PokerSessionPage() {
         }
     };
 
+    const handleLeave = async () => {
+        const response = await fetch(`http://localhost:3001/api/sessions/${room}/removeUser`, {
+            method: "PATCH",
+            body: JSON.stringify({ id: room, userID, session }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const json = await response.json()
+
+        if (response.ok) {
+            socket.emit('leave_room', { room })
+        } else {
+            console.error('Failed to leave session ', json)
+        }
+    }
+
     return (
         <div className="App">
             <NameForm onJoin={handleJoin} />
             <h2>Room: {room}</h2>
-            <h2>name Test: {userID}</h2>
-            <ol>
-                {userList.map((user) => (
-                    <li key={user.id}>{user.name}</li>
-                ))}
-            </ol>
-            {session &&
-                <h3>{session.createdAt}</h3>
-            }
             <h3>Hello, {username}</h3>
+            <ParticipantList userList={userList} />
+            <Link to="/">
+                <button onClick={handleLeave}>Leave Room</button>
+            </Link>
+            <button onClick={handleLeave}>Leave Room 2</button>
         </div>
     );
 };
