@@ -15,7 +15,7 @@ function HomePage() {
   };
 
   return (
-    <div>
+    <div className="home-page">
       <h1>Home Page</h1>
       <form onSubmit={handleSubmit}>
         <label>Enter the room ID you want to join: </label>

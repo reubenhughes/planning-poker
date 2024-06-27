@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+
   return (
     <header>
       <div className="container">
         <Link to="/">
-          <h1>Planning Poker</h1>
+          <h3>Planning Poker</h3>
         </Link>
       </div>
     </header>
