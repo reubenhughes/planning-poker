@@ -13,7 +13,7 @@ function LeaveSessionAlert({ leaveSession }) {
     setOpen(true);
   };
 
-  const handleClose = (userExit) => {
+  const handleClose = () => {
     setOpen(false);
   };
 

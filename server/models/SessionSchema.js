@@ -10,7 +10,7 @@ const voteSchema = new mongoose.Schema({
   },
   vote: {
     type: String,
-  },
+  }
 });
 
 const SessionSchema = new Schema({
@@ -20,6 +20,12 @@ const SessionSchema = new Schema({
     },
   ],
   votes: [voteSchema],
+  majorityVote: {
+    type: Number
+  },
+  averageVote: {
+    type: Number
+  },
   createdAt: {
     type: Date,
     default: Date.now,
