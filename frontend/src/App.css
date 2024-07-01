@@ -3,12 +3,12 @@
 
 /* layout */
 :root {
-  --primary: #41C86C;
-  --secondary: #8DE2AA;
-  --accent: #5DDA85;
+  --primary: #41c86c;
+  --secondary: #8de2aa;
+  --accent: #5dda85;
 }
 body {
-  background: #F4FBF5;
+  background: #f4fbf5;
   color: #030705;
   margin: 0;
   font-family: "Poppins", Arial, sans-serif;

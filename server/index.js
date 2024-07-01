@@ -32,8 +32,8 @@ io.on("connection", (socket) => {
     socket.to(data.room).emit("user_joined", data);
   });
   socket.on("select_vote", (data) => {
-    console.log(`User ${data.userID} has voted`)
-    socket.to(data.room).emit("user_voted", data)
+    console.log(`User ${data.userID} has voted`);
+    socket.to(data.room).emit("user_voted", data);
   });
   socket.on("leave_room", (data) => {
     console.log(`User ${data.username} left room: ${data.room}`);
@@ -41,13 +41,13 @@ io.on("connection", (socket) => {
     socket.leave(data.room);
   });
   socket.on("show_votes", (data) => {
-    console.log("Showing votes")
+    console.log("Showing votes");
     socket.to(data.room).emit("votes_shown", data);
-  })
+  });
   socket.on("reset_votes", (data) => {
-    console.log("Resetting votes")
-    socket.to(data.room).emit("votes_reset", data)
-  })
+    console.log("Resetting votes");
+    socket.to(data.room).emit("votes_reset", data);
+  });
 });
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
