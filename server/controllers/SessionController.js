@@ -28,6 +28,7 @@ const createSession = async (req, res) => {
     res.status(200).json(session);
     console.log(`Created session ${res.params}`);
   } catch (error) {
+    console.log(error)
     res.status(400).json({ error: error.message });
   }
 };
@@ -123,9 +124,10 @@ const updateSession = async (req, res) => {
 };
 
 const addUserToSession = async (req, res) => {
-  const { sessionID, name, vote } = req.body;
+  const { sessionID, name, role, vote } = req.body;
   const userID = new Mongoose.Types.ObjectId();
-  const participantVote = { userID, name, vote };
+  //const userParticipantObj = { userID, name, role};
+  const userVoteObj = { userID, name, vote };
 
   try {
     const session = await Session.findById(sessionID);
@@ -135,7 +137,9 @@ const addUserToSession = async (req, res) => {
 
     if (!session.participants.includes(userID)) {
       session.participants.push(userID);
-      session.votes.push(participantVote);
+      if (role == "Voter") {
+        session.votes.push(userVoteObj)
+      }
       await session.save();
     }
     res.status(200).json({ session: session, userID: userID });
@@ -148,7 +152,7 @@ const addUserToSession = async (req, res) => {
 const removeUserFromSession = async (req, res) => {
   const { id, userID, session } = req.body;
   const updatedParticipantList = session.participants.filter(
-    (participant) => participant !== userID,
+    (participant) => participant.userID !== userID,
   );
   const updatedVoteList = session.votes.filter(
     (vote) => vote.userID !== userID,

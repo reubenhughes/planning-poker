@@ -15,7 +15,9 @@ function PokerSessionPage() {
   const navigate = useNavigate();
   const [userID, setUserID] = useState("");
   const [username, setUsername] = useState("");
+  const [userRole, setUserRole] = useState("");
   const [session, setSession] = useState("");
+  const [participantList, setParticpantList] = useState([]);
   const [voteList, setVoteList] = useState([]);
   const [vote, setVote] = useState("");
   const [userVoted, setUserVoted] = useState(false)
@@ -96,10 +98,10 @@ function PokerSessionPage() {
     };
   }, [voteList, room]);
 
-  const handleJoin = async (name) => {
+  const handleJoin = async ({ name, role }) => {
     const response = await fetch("http://localhost:3001/api/sessions/addUser", {
       method: "POST",
-      body: JSON.stringify({ sessionID: room, name, vote: "0" }),
+      body: JSON.stringify({ sessionID: room, name, role, vote: "0" }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -108,8 +110,9 @@ function PokerSessionPage() {
 
     if (response.ok) {
       setSession(json.session);
-      setUsername(name);
       setUserID(json.userID);
+      setUsername(name);
+      setUserRole(role)
       setVoteList(
         json.session.votes.map((user) => ({
           id: user.userID,
@@ -220,6 +223,7 @@ function PokerSessionPage() {
           voteMessage: "Participant has not voted"
         })),
     );
+    setUserVoted(false);
     setShowVotes(false);
     console.log(voteList)
     socket.emit("reset_votes", { room })
@@ -230,10 +234,13 @@ function PokerSessionPage() {
       <NameForm onJoin={handleJoin} />
       <h2>Room: {room}</h2>
       <h3>Hello, {username}</h3>
+      <h3>Role: {userRole}</h3>
       <ParticipantList voteList={voteList} showVotes={showVotes} />
       <VoteButtonGroup selectVote={handleVoteUpdate}/>
       <LeaveSessionAlert leaveSession={handleLeave}></LeaveSessionAlert>
-      <h3>{vote}</h3>
+      {userVoted &&
+        <h3>Vote: {vote}</h3>
+      }
       <Button onClick={handleShowVotes} variant="contained" disabled={showVotes}>Show Votes</Button>
       <button onClick={handleTestClick}>Show votes toggler</button>
       <button onClick={handleResetVotes}>Reset Votes</button>
