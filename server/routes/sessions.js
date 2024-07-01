@@ -16,7 +16,7 @@ router.get("/:id", getSession);
 router.post("/", createSession);
 
 // UPDATE session
-router.patch("/:id", updateSession);
+router.patch("/:id/updateSession", updateSession);
 
 // ADD user to session
 router.post("/addUser", addUserToSession);

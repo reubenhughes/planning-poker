@@ -11,9 +11,16 @@ function ParticipantList(props) {
       <nav aria-label="main mailbox folders">
         <ListSubheader>Participants in the Session</ListSubheader>
         <List>
-          {props.userList.map((user) => (
+          {props.voteList.map((user) => (
             <ListItem disablePadding key={user.id}>
-              <ListItemText primary={user.name} secondary={user.vote} />
+              {props.showVotes ? (
+                <ListItemText primary={user.name} secondary={user.vote} />
+              ) : (
+                <ListItemText
+                  primary={user.name}
+                  secondary={user.voteMessage}
+                />
+              )}
             </ListItem>
           ))}
         </List>

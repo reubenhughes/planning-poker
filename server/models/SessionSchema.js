@@ -1,6 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const participantSchema = new mongoose.Schema({
+  userID: {
+    type: Schema.Types.ObjectId,
+  },
+  name: {
+    type: String,
+  },
+  role: {
+    type: String,
+  },
+});
+
 const voteSchema = new mongoose.Schema({
   userID: {
     type: Schema.Types.ObjectId,
@@ -14,12 +26,14 @@ const voteSchema = new mongoose.Schema({
 });
 
 const SessionSchema = new Schema({
-  participants: [
-    {
-      type: Schema.Types.ObjectId,
-    },
-  ],
+  participants: [participantSchema],
   votes: [voteSchema],
+  majorityVote: {
+    type: Number,
+  },
+  averageVote: {
+    type: Number,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
