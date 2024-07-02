@@ -6,7 +6,8 @@ const {
   updateSession,
   addUserToSession,
   removeUserFromSession,
-  testUpdate,
+  updateUserHasVoted,
+  clearVotes
 } = require("../controllers/SessionController");
 
 // GET session
@@ -26,5 +27,11 @@ router.post("/removeUser", removeUserFromSession);
 
 // TEST Patch
 router.patch("/:id/removeUser", removeUserFromSession);
+
+// TEST update user vote
+router.patch("/:id/updateUserHasVoted", updateUserHasVoted)
+
+// Test clear votes
+router.patch("/:id/clearVotes", clearVotes)
 
 module.exports = router;

@@ -12,7 +12,7 @@ body {
   color: #030705;
   margin: 0;
   font-family: "Poppins", Arial, sans-serif;
-  display: grid;
+  display: flex;
 }
 .dark-mode {
   background: #040b05;

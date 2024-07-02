@@ -12,7 +12,7 @@ function ParticipantList(props) {
         <ListSubheader>Participants in the Session</ListSubheader>
         <List>
           {props.voteList.map((user) => (
-            <ListItem disablePadding key={user.id}>
+            <ListItem disablePadding key={user.userID}>
               {props.showVotes ? (
                 <ListItemText primary={user.name} secondary={user.vote} />
               ) : (
