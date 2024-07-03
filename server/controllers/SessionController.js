@@ -37,7 +37,7 @@ const createSession = async (req, res) => {
 };
 
 const updateSession = async (req, res) => {
-  const { id, session, oldVoteList } = req.body;
+  const { id, session, participantList, oldVoteList } = req.body;
   let majorityVote = "0";
   let averageVote = "0";
   let totalVotes = 0;
@@ -58,25 +58,22 @@ const updateSession = async (req, res) => {
   let item;
 
   console.log("vote list:", oldVoteList);
-  console.log("session participants:", session.participants);
+  console.log("session participants:", participantList);
   console.log("session:", session);
 
-  const updatedVoteList = oldVoteList.map((user) => ({
-    ...user,
-    userID: user.id,
-  }));
-
-  const voteList = updatedVoteList
-    .filter((user) => user.vote != "0" && user.vote != "?")
-    .map((user) => user.vote);
+  const voteList = oldVoteList
+    .filter((voter) => voter.vote != "0" && voter.vote != "?")
+    .map((voter) => voter.vote);
   //const voteList = filteredVoteList.map((user) => (user.vote))
   console.log("votes:", voteList);
-  console.log(voteList.length);
+  console.log("votes length:", voteList.length);
+  console.log("voteList at position 0:", voteList[0]);
+  console.log("voteList at position 1:", voteList[1]);
 
-  try {
+  if (voteList.length == 0) {
+    majorityVote = 0;
+  } else {
     majorityVote = voteList[0];
-  } catch {
-    majorityVote = "0";
   }
   // Iterate through the array to find the most frequent item
   for (var i = 0; i < voteList.length; i++) {
@@ -113,8 +110,8 @@ const updateSession = async (req, res) => {
     const updatedSession = await Session.findOneAndUpdate(
       { _id: id },
       {
-        participants: session.participants,
-        votes: updatedVoteList,
+        participants: participantList,
+        votes: oldVoteList,
         majorityVote: majorityVote,
         averageVote: averageVote,
         createdAt: session.createdAt,
@@ -128,10 +125,13 @@ const updateSession = async (req, res) => {
 };
 
 const addUserToSession = async (req, res) => {
-  const { sessionID, name, role, vote } = req.body;
+  const { sessionID, name, role, vote, voteMessage } = req.body;
   const userID = new Mongoose.Types.ObjectId();
-  const userParticipantObj = { userID, name, role };
-  const userVoteObj = { userID, name, vote };
+  const participantArrayID = new Mongoose.Types.ObjectId();
+  const voteArrayID = new Mongoose.Types.ObjectId();
+  const userParticipantObj = { _id: participantArrayID, userID, name, role };
+  const userVoteObj = { _id: voteArrayID, userID, name, vote, voteMessage };
+  console.log("user added to session");
 
   try {
     const session = await Session.findById(sessionID);
@@ -146,7 +146,12 @@ const addUserToSession = async (req, res) => {
       }
       await session.save();
     }
-    res.status(200).json({ session: session, userID: userID });
+    res.status(200).json({
+      session: session,
+      userID: userID,
+      participantArrayID: participantArrayID,
+      voteArrayID: voteArrayID,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -176,10 +181,65 @@ const removeUserFromSession = async (req, res) => {
   }
 };
 
+const updateUserHasVoted = async (req, res) => {
+  console.log("this route being called");
+  const { id, userID, userVote, voteList } = req.body;
+  const updatedVoteList = voteList.map((voter) => {
+    if (voter.userID === userID) {
+      return {
+        ...voter,
+        vote: userVote,
+        voteMessage: "Participant has voted",
+      };
+    } else {
+      return voter;
+    }
+  });
+  console.log("old vote list:", voteList);
+  console.log("updated vote list:", updatedVoteList);
+  try {
+    const updatedSession = await Session.findOneAndUpdate(
+      { _id: id },
+      {
+        votes: updatedVoteList,
+      },
+    );
+    console.log("updated session:", updatedSession);
+    res.status(200).json(updatedSession);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+    console.log(error);
+  }
+};
+
+const clearVotes = async (req, res) => {
+  const { id, voteList } = req.body;
+  const updatedVoteList = voteList.map((voter) => ({
+    ...voter,
+    vote: "0",
+    voteMessage: "Participant has not voted",
+  }));
+  try {
+    const session = await Session.findOneAndUpdate(
+      { _id: id },
+      {
+        votes: updatedVoteList,
+      },
+    );
+    console.log("Cleared votes");
+    res.status(200).json(session);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+    console.log(error);
+  }
+};
+
 module.exports = {
   getSession,
   createSession,
   updateSession,
   addUserToSession,
   removeUserFromSession,
+  updateUserHasVoted,
+  clearVotes,
 };
