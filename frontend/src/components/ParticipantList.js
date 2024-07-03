@@ -6,29 +6,28 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 
 function ParticipantList({ voteList, showVotes, userID, onKick }) {
-
-    const handleClick = (kickedUserID) => {
-        console.log("kicking user:", kickedUserID)
-        onKick(kickedUserID)
-    }
+  const handleClick = (kickedUserID) => {
+    console.log("kicking user:", kickedUserID);
+    onKick(kickedUserID);
+  };
 
   return (
     <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       <nav aria-label="main mailbox folders">
         <ListSubheader>Participants in the Session</ListSubheader>
         <List>
-          {voteList.map((user) => (
-            <ListItem disablePadding key={user.id}>
+          {voteList.map((voter) => (
+            <ListItem disablePadding key={voter.id}>
               {showVotes ? (
-                <ListItemText primary={user.name} secondary={user.vote} />
+                <ListItemText primary={voter.name} secondary={voter.vote} />
               ) : (
                 <ListItemText
-                  primary={user.name}
-                  secondary={user.voteMessage}
+                  primary={voter.name}
+                  secondary={voter.voteMessage}
                 />
               )}
-              {(user.userID !== userID && 
-                <button onClick={() => handleClick(user.userID)}>Kick</button>
+              {voter.userID !== userID && (
+                <button onClick={() => handleClick(voter.userID)}>Kick</button>
               )}
             </ListItem>
           ))}

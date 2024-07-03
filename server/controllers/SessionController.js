@@ -62,18 +62,18 @@ const updateSession = async (req, res) => {
   console.log("session:", session);
 
   const voteList = oldVoteList
-    .filter((user) => user.vote != "0" && user.vote != "?")
-    .map((user) => user.vote);
+    .filter((voter) => voter.vote != "0" && voter.vote != "?")
+    .map((voter) => voter.vote);
   //const voteList = filteredVoteList.map((user) => (user.vote))
   console.log("votes:", voteList);
   console.log("votes length:", voteList.length);
-  console.log("voteList at position 0:", voteList[0])
-  console.log("voteList at position 1:", voteList[1])
+  console.log("voteList at position 0:", voteList[0]);
+  console.log("voteList at position 1:", voteList[1]);
 
   if (voteList.length == 0) {
-    majorityVote = 0
+    majorityVote = 0;
   } else {
-    majorityVote = voteList[0]
+    majorityVote = voteList[0];
   }
   // Iterate through the array to find the most frequent item
   for (var i = 0; i < voteList.length; i++) {
@@ -122,7 +122,6 @@ const updateSession = async (req, res) => {
     res.status(400).json({ message: error.messsage });
     console.log(error);
   }
-
 };
 
 const addUserToSession = async (req, res) => {
@@ -132,7 +131,7 @@ const addUserToSession = async (req, res) => {
   const voteArrayID = new Mongoose.Types.ObjectId();
   const userParticipantObj = { _id: participantArrayID, userID, name, role };
   const userVoteObj = { _id: voteArrayID, userID, name, vote, voteMessage };
-  console.log("user added to session")
+  console.log("user added to session");
 
   try {
     const session = await Session.findById(sessionID);
@@ -147,7 +146,12 @@ const addUserToSession = async (req, res) => {
       }
       await session.save();
     }
-    res.status(200).json({ session: session, userID: userID, participantArrayID: participantArrayID, voteArrayID: voteArrayID });
+    res.status(200).json({
+      session: session,
+      userID: userID,
+      participantArrayID: participantArrayID,
+      voteArrayID: voteArrayID,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -178,57 +182,57 @@ const removeUserFromSession = async (req, res) => {
 };
 
 const updateUserHasVoted = async (req, res) => {
-    console.log("this route being called")
-    const { id, userID, userVote, voteList } = req.body;
-    const updatedVoteList = voteList.map((user) => {
-        if (user.userID === userID) {
-            return {
-                ...user,
-                vote: userVote,
-                voteMessage: "Participant has voted",
-            }
-        } else {
-            return user
-        }
-    })
-    console.log("old vote list:", voteList)
-    console.log("updated vote list:", updatedVoteList)
-    try {
-        const updatedSession = await Session.findOneAndUpdate(
-            { _id: id },
-            {
-                votes: updatedVoteList
-            }
-        )
-        console.log("updated session:", updatedSession)
-        res.status(200).json(updatedSession)
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-        console.log(error)
-    }   
-}
+  console.log("this route being called");
+  const { id, userID, userVote, voteList } = req.body;
+  const updatedVoteList = voteList.map((voter) => {
+    if (voter.userID === userID) {
+      return {
+        ...voter,
+        vote: userVote,
+        voteMessage: "Participant has voted",
+      };
+    } else {
+      return voter;
+    }
+  });
+  console.log("old vote list:", voteList);
+  console.log("updated vote list:", updatedVoteList);
+  try {
+    const updatedSession = await Session.findOneAndUpdate(
+      { _id: id },
+      {
+        votes: updatedVoteList,
+      },
+    );
+    console.log("updated session:", updatedSession);
+    res.status(200).json(updatedSession);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+    console.log(error);
+  }
+};
 
 const clearVotes = async (req, res) => {
-    const { id, voteList } = req.body;
-    const updatedVoteList = voteList.map((user) => ({
-        ...user,
-        vote: "0",
-        voteMessage: "Participant has not voted"
-    }))
-    try {
-        const session = await Session.findOneAndUpdate(
-            { _id: id },
-            {
-                votes: updatedVoteList
-            }
-        )
-        console.log("Cleared votes")
-        res.status(200).json(session)
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-        console.log(error)
-    }
-}
+  const { id, voteList } = req.body;
+  const updatedVoteList = voteList.map((voter) => ({
+    ...voter,
+    vote: "0",
+    voteMessage: "Participant has not voted",
+  }));
+  try {
+    const session = await Session.findOneAndUpdate(
+      { _id: id },
+      {
+        votes: updatedVoteList,
+      },
+    );
+    console.log("Cleared votes");
+    res.status(200).json(session);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+    console.log(error);
+  }
+};
 
 module.exports = {
   getSession,
@@ -237,5 +241,5 @@ module.exports = {
   addUserToSession,
   removeUserFromSession,
   updateUserHasVoted,
-  clearVotes
+  clearVotes,
 };

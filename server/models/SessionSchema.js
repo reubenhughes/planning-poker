@@ -26,7 +26,7 @@ const voteSchema = new mongoose.Schema({
   voteMessage: {
     type: String,
     default: "Participant has not voted",
-  }
+  },
 });
 
 const SessionSchema = new Schema({
