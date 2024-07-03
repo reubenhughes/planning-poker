@@ -118,11 +118,26 @@ function PokerSessionPage() {
       setUserVoted(false)
     };
 
+    const handleUserKicked = (data) => {
+        if (userID === data.userID) {
+            alert("You have been kicked from the session!")
+            navigate("/")
+        } else {
+            setParticipantList((prevUserList) =>
+                prevUserList.filter((user) => user.userID !== data.userID),
+              );
+            setVoteList((prevUserList) =>
+                prevUserList.filter((user) => user.userID !== data.userID),
+            );
+        }
+    }
+
     socket.on("user_joined", handleUserJoined);
     socket.on("user_left", handleUserLeft);
     socket.on("user_voted", handleUserVoted);
     socket.on("votes_shown", handleRefresh);
     socket.on("votes_reset", handleVotesReset);
+    socket.on("user_kicked", handleUserKicked);
 
     return () => {
       socket.off("user_joined", handleUserJoined);
@@ -130,6 +145,7 @@ function PokerSessionPage() {
       socket.off("user_voted", handleUserVoted);
       socket.off("votes_shown", handleRefresh);
       socket.off("votes_reset", handleVotesReset);
+      socket.off("user_kicked", handleUserKicked);
     };
   }, [participantList, voteList, room]);
 
@@ -165,6 +181,21 @@ function PokerSessionPage() {
           voteMessage: user.voteMessage,
         })),
       );
+
+      console.log("participantslist:", json.session.participants.map((user) => ({
+        id: user._id,
+        userID: user.userID,
+        name: user.name,
+        role: user.role,
+      })))
+      console.log("vote list:", json.session.votes.map((user) => ({
+        id: user._id,
+        userID: user.userID,
+        name: user.name,
+        vote: user.vote,
+        voteMessage: user.voteMessage,
+      })))
+
       socket.emit("join_room", { name, role, room, participantID: json.participantArrayID, voteID: json.voteArrayID, userID: json.userID });
     } else {
       console.error("Failed to join session: ", json);
@@ -361,13 +392,40 @@ function PokerSessionPage() {
     socket.emit("reset_votes", { room });
   };
 
+  const handleTestKick = async (kickedUserID) => {
+    const response = await fetch(
+        `http://localhost:3001/api/sessions/${room}/removeUser`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ id: room, userID: kickedUserID, participantList, voteList }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      const json = await response.json();
+
+      setParticipantList((prevUserList) =>
+        prevUserList.filter((user) => user.userID !== kickedUserID),
+      );
+        setVoteList((prevUserList) =>
+          prevUserList.filter((user) => user.userID !== kickedUserID),
+        );
+
+      if (response.ok) {
+        socket.emit("kick_user", { room, userID: kickedUserID });
+      } else {
+        console.error("Failed to kick user ", json);
+      }
+  }
+
   return (
     <div className="App">
       <NameForm onJoin={handleJoin} />
       <h2>Room: {room}</h2>
       <h3>Hello, {username}</h3>
       <h3>Role: {userRole}</h3>
-      <ParticipantList voteList={voteList} showVotes={showVotes} />
+      <ParticipantList voteList={voteList} showVotes={showVotes} userID={userID} onKick={handleTestKick}/>
       <VoteButtonGroup selectVote={handleVoteUpdate} />
       <LeaveSessionAlert leaveSession={handleLeave}></LeaveSessionAlert>
       {userVoted && <h3>Vote: {vote}</h3>}
@@ -391,11 +449,6 @@ function PokerSessionPage() {
           <h4>Average vote: {session.averageVote}</h4>
         </div>
       )}
-      {voteList.map((user) => (
-        <h4 key={user.id}>
-            Participant: {user.name} userID: {user.userID} arrayID={user.id}
-        </h4>
-      ))}
       <button onClick={testThing}>testingthing</button>
     </div>
   );

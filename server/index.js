@@ -48,6 +48,10 @@ io.on("connection", (socket) => {
     console.log("Resetting votes");
     socket.to(data.room).emit("votes_reset", data);
   });
+  socket.on("kick_user", (data) => {
+    console.log("Kicking user");
+    socket.to(data.room).emit("user_kicked", data)
+  })
 });
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
