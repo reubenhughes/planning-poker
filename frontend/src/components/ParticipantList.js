@@ -12,12 +12,11 @@ function ParticipantList({ voteList, showVotes, userID, onKick }) {
   };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+    <Box sx={{ width: "100%", maxHeight: 450, overflow: "auto", '& ul': { padding: 0 } }}>
       <nav aria-label="main mailbox folders">
-        <ListSubheader>Participants in the Session</ListSubheader>
         <List>
           {voteList.map((voter) => (
-            <ListItem disablePadding key={voter.id}>
+            <ListItem key={voter.id}>
               {showVotes ? (
                 <ListItemText primary={voter.name} secondary={voter.vote} />
               ) : (

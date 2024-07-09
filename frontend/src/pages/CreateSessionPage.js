@@ -31,7 +31,7 @@ function CreateSessionPage() {
   };
 
   return (
-    <div>
+    <div className="create-session">
       <h2>Create Session Page</h2>
       <button onClick={handleCreateSession}>Create New Session</button>
     </div>

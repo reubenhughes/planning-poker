@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
-  const [room, setRoom] = useState("667976bf28f5c029332fcef7");
+  const [room, setRoom] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -15,7 +15,7 @@ function HomePage() {
   };
 
   return (
-    <div className="home-page">
+    <div className="home">
       <h1>Home Page</h1>
       <form onSubmit={handleSubmit}>
         <label>Enter the room ID you want to join: </label>

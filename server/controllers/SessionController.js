@@ -37,7 +37,7 @@ const createSession = async (req, res) => {
 };
 
 const updateSession = async (req, res) => {
-  const { id, session, participantList, oldVoteList } = req.body;
+  const { sessionID, session, participantList, oldVoteList } = req.body;
   let majorityVote = "0";
   let averageVote = "0";
   let totalVotes = 0;
@@ -108,7 +108,7 @@ const updateSession = async (req, res) => {
 
   try {
     const updatedSession = await Session.findOneAndUpdate(
-      { _id: id },
+      { _id: sessionID },
       {
         participants: participantList,
         votes: oldVoteList,
@@ -159,7 +159,7 @@ const addUserToSession = async (req, res) => {
 };
 
 const removeUserFromSession = async (req, res) => {
-  const { id, userID, participantList, voteList } = req.body;
+  const { sessionID, userID, participantList, voteList } = req.body;
   console.log("Participant list:", participantList);
   const updatedParticipantList = participantList.filter(
     (participant) => participant.userID !== userID,
@@ -167,7 +167,7 @@ const removeUserFromSession = async (req, res) => {
   const updatedVoteList = voteList.filter((vote) => vote.userID !== userID);
   try {
     const updatedSession = await Session.findOneAndUpdate(
-      { _id: id },
+      { _id: sessionID },
       {
         participants: updatedParticipantList,
         votes: updatedVoteList,
@@ -183,7 +183,7 @@ const removeUserFromSession = async (req, res) => {
 
 const updateUserHasVoted = async (req, res) => {
   console.log("this route being called");
-  const { id, userID, userVote, voteList } = req.body;
+  const { sessionID, userID, userVote, voteList } = req.body;
   const updatedVoteList = voteList.map((voter) => {
     if (voter.userID === userID) {
       return {
@@ -199,7 +199,7 @@ const updateUserHasVoted = async (req, res) => {
   console.log("updated vote list:", updatedVoteList);
   try {
     const updatedSession = await Session.findOneAndUpdate(
-      { _id: id },
+      { _id: sessionID },
       {
         votes: updatedVoteList,
       },
@@ -213,7 +213,7 @@ const updateUserHasVoted = async (req, res) => {
 };
 
 const clearVotes = async (req, res) => {
-  const { id, voteList } = req.body;
+  const { sessionID, voteList } = req.body;
   const updatedVoteList = voteList.map((voter) => ({
     ...voter,
     vote: "0",
@@ -221,7 +221,7 @@ const clearVotes = async (req, res) => {
   }));
   try {
     const session = await Session.findOneAndUpdate(
-      { _id: id },
+      { _id: sessionID },
       {
         votes: updatedVoteList,
       },
