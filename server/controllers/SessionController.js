@@ -18,12 +18,13 @@ const getSession = async (req, res) => {
 };
 
 const createSession = async (req, res) => {
-  const { participants, votes, majorityVote, averageVote, createdAt } =
+  const { participants, votes, status, majorityVote, averageVote, createdAt } =
     req.body;
   try {
     const session = await Session.create({
       participants,
       votes,
+      status,
       majorityVote,
       averageVote,
       createdAt,
@@ -112,6 +113,7 @@ const updateSession = async (req, res) => {
       {
         participants: participantList,
         votes: oldVoteList,
+        status: "finished",
         majorityVote: majorityVote,
         averageVote: averageVote,
         createdAt: session.createdAt,
@@ -224,6 +226,7 @@ const clearVotes = async (req, res) => {
       { _id: sessionID },
       {
         votes: updatedVoteList,
+        status: "voting",
       },
     );
     console.log("Cleared votes");

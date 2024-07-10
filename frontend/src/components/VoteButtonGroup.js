@@ -18,25 +18,23 @@ function VoteButtonGroup({ selectVote, userRole, disabled }) {
 
   return (
     <div>
-        {userRole === "Voter" ? (
-            <Stack spacing={4} useFlexGap flexWrap="wrap" direction="row">
-            {voteList.map((vote) => (
-              <Button
-                variant="contained"
-                value={vote.value}
-                onClick={(e) => selectVote(e.target.value)}
-                key={vote.id}
-                disabled={disabled}
-              >
-                {vote.value}
-              </Button>
-            ))}
-          </Stack>
-        )
-        :
-        (
-            <h4>As an observer, you can't vote</h4>
-        )}
+      {userRole === "Voter" ? (
+        <Stack spacing={4} useFlexGap flexWrap="wrap" direction="row">
+          {voteList.map((vote) => (
+            <Button
+              variant="contained"
+              value={vote.value}
+              onClick={(e) => selectVote(e.target.value)}
+              key={vote.id}
+              disabled={disabled}
+            >
+              {vote.value}
+            </Button>
+          ))}
+        </Stack>
+      ) : (
+        <h4>As an observer, you can't vote</h4>
+      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 function HomePage() {
   const [room, setRoom] = useState("");
@@ -10,23 +11,19 @@ function HomePage() {
     navigate(`/session/${room}`);
   };
 
-  const createRoom = () => {
+  const handleClick = () => {
     navigate("/create-session");
   };
 
   return (
     <div className="home">
-      <h1>Home Page</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Enter the room ID you want to join: </label>
-        <input
-          type="text"
-          value={room}
-          onChange={(e) => setRoom(e.target.value)}
-        />
-        <input type="submit" value="join" />
-      </form>
-      <button onClick={createRoom}>Create Session</button>
+      <div className="begin-planning">
+        <h3>Begin Planning</h3>
+        <h5>Click the button below to begin planning</h5>
+        <Button variant="contained" onClick={handleClick}>
+          CLick Here
+        </Button>
+      </div>
     </div>
   );
 }
