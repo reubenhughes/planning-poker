@@ -3,21 +3,26 @@
 
 /* layout */
 :root {
+  --bg-color: #31d3ab;
+  --text-color: #333;
   --primary: #31d3ab;
   --secondary: #7064dd;
   --accent: #92a6e7;
+  --card-subheader-color: #ffffff;
+  --card-color: #f4fbf5;
+}
+[data-theme="dark"] {
+  --bg-color: #040b05;
+  --text-color: #f4fbf5;
+  --primary: #2ccea6;
+  --secondary: #2948ac;
+  --accent: #f4fbf5;
+  --card-subheader-color: #373b3b;
+  --card-color: #242727;
 }
 body {
-  background: var(--primary);
+  background: var(--bg-color);
   color: #030705;
-  margin: 0;
-  font-family: "Poppins", Arial, sans-serif;
-}
-.dark-mode {
-  background: #040b05;
-  --secondary: #1d7239;
-  --accent: #25a24c;
-  color: #f8fcfa;
   margin: 0;
   font-family: "Poppins", Arial, sans-serif;
 }
@@ -50,7 +55,7 @@ header a {
 }
 
 .home h3 {
-  background: #ffffff;
+  background: #f4fbf5;
   margin: auto;
   padding: 10px 10px;
   border-top-right-radius: 5px;
@@ -80,8 +85,8 @@ header a {
 }
 
 .poker-session div {
-  background: #f4fbf5;
-  color: #333;
+  background: var(--card-color);
+  color: var(--text-color);
   border-radius: 5px;
 }
 
@@ -90,11 +95,11 @@ header a {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--secondary);
+  color: var(--text-color);
 }
 
 .poker-session h3 {
-  background: #ffffff;
+  background: var(--card-subheader-color);
   margin: auto;
   padding: 10px 10px;
   border-top-right-radius: 5px;
@@ -161,6 +166,10 @@ header a {
   color: white;
   background: var(--secondary);
   padding: 10px 15px;
+}
+
+.session-buttons Button:disabled {
+  background: var(--accent);
 }
 
 .session-buttons span {
