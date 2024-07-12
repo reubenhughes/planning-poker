@@ -175,7 +175,7 @@ function PokerSessionPage() {
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    );
     const json = await response.json();
     console.log("show votes:", showVotes)
 
@@ -303,7 +303,7 @@ function PokerSessionPage() {
           role: participant.role,
         })),
       );
-      
+
       setVoteList(
         json.votes.map((voter) => ({
           id: voter._id,

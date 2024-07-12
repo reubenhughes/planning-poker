@@ -171,7 +171,6 @@ header a {
 .session-buttons Button:disabled {
   background: var(--accent);
 }
-
 .session-buttons span {
   padding-right: 8px;
 }

@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 
 function HomePage() {
   const navigate = useNavigate();
-
+  
   const handleClick = () => {
     navigate("/create-session");
   };
