@@ -32,6 +32,10 @@ const voteSchema = new mongoose.Schema({
 const SessionSchema = new Schema({
   participants: [participantSchema],
   votes: [voteSchema],
+  status: {
+    type: String,
+    default: "voting",
+  },
   majorityVote: {
     type: Number,
   },

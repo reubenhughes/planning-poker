@@ -20,18 +20,15 @@ router.post("/", createSession);
 router.patch("/:id/updateSession", updateSession);
 
 // ADD user to session
-router.post("/addUser", addUserToSession);
+router.patch("/:id/addUser", addUserToSession);
 
-// REMOVE user from session
-router.post("/removeUser", removeUserFromSession);
-
-// TEST Patch
+// Remove user from session
 router.patch("/:id/removeUser", removeUserFromSession);
 
-// TEST update user vote
+// Update user vote
 router.patch("/:id/updateUserHasVoted", updateUserHasVoted);
 
-// Test clear votes
+// Clear votes
 router.patch("/:id/clearVotes", clearVotes);
 
 module.exports = router;

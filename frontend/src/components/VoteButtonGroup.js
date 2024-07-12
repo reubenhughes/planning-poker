@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Stack from "@mui/material/Stack";
 
-function VoteButtonGroup({ selectVote }) {
+function VoteButtonGroup({ selectVote, userRole, disabled }) {
   const voteList = [
     { id: "1", value: "1" },
     { id: "2", value: "2" },
@@ -18,19 +18,23 @@ function VoteButtonGroup({ selectVote }) {
 
   return (
     <div>
-      <ButtonGroup variant="outlined" aria-label="Basic button group">
-        <Stack spacing={2} direction="row">
+      {userRole === "Voter" ? (
+        <Stack spacing={4} useFlexGap flexWrap="wrap" direction="row">
           {voteList.map((vote) => (
             <Button
+              variant="contained"
               value={vote.value}
               onClick={(e) => selectVote(e.target.value)}
               key={vote.id}
+              disabled={disabled}
             >
               {vote.value}
             </Button>
           ))}
         </Stack>
-      </ButtonGroup>
+      ) : (
+        <h4>As an observer, you can't vote</h4>
+      )}
     </div>
   );
 }

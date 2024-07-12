@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 function CreateSessionPage() {
   const navigate = useNavigate();
@@ -7,6 +8,7 @@ function CreateSessionPage() {
     const session = {
       participants: [],
       votes: [],
+      status: "voting",
       majorityVote: 0,
       averageVote: 0,
       createdAt: Date.now,
@@ -31,9 +33,20 @@ function CreateSessionPage() {
   };
 
   return (
-    <div>
-      <h2>Create Session Page</h2>
-      <button onClick={handleCreateSession}>Create New Session</button>
+    <div className="create-session">
+      <div className="create-session-button">
+        <h3>Create Session</h3>
+        <h5>
+          Click the button below to create a new session, use the options on the
+          right to customise the session
+        </h5>
+        <Button variant="contained" onClick={handleCreateSession}>
+          Create New Session
+        </Button>
+      </div>
+      <div className="session-options">
+        <h3>Session Options</h3>
+      </div>
     </div>
   );
 }

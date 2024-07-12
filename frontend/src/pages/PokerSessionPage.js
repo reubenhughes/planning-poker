@@ -4,9 +4,11 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import NameForm from "../components/NameForm";
 import ParticipantList from "../components/ParticipantList";
-import LeaveSessionAlert from "../components/LeaveSessionAlert";
+import LeaveSessionButton from "../components/LeaveSessionButton";
 import VoteButtonGroup from "../components/VoteButtonGroup";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
 
 const socket = io.connect("http://localhost:3001");
 
@@ -15,13 +17,14 @@ function PokerSessionPage() {
   const navigate = useNavigate();
   const [userID, setUserID] = useState("");
   const [username, setUsername] = useState("");
-  const [userRole, setUserRole] = useState("");
+  const [userRole, setUserRole] = useState("Voter");
   const [session, setSession] = useState("");
   const [participantList, setParticipantList] = useState([]);
   const [voteList, setVoteList] = useState([]);
-  const [vote, setVote] = useState("");
+  const [vote, setVote] = useState("0");
   const [userVoted, setUserVoted] = useState(false);
   const [showVotes, setShowVotes] = useState(false);
+  const [sessionStatus, setSessionStatus] = useState("");
 
   useEffect(() => {
     const handleUserJoined = (data) => {
@@ -45,6 +48,7 @@ function PokerSessionPage() {
             voteMessage: "Participant has not voted",
           },
         ]);
+        setShowVotes(false);
       }
     };
 
@@ -103,6 +107,8 @@ function PokerSessionPage() {
           })),
         );
         setSession(json);
+        setSessionStatus(json.status);
+        console.log("session:", json);
       } else {
         console.error("Failed to fetch session");
       }
@@ -116,8 +122,11 @@ function PokerSessionPage() {
           voteMessage: "Participant has not voted",
         })),
       );
+      console.log("votes resetting");
       setShowVotes(false);
       setUserVoted(false);
+      setSessionStatus("voting");
+      setVote("0");
     };
 
     const handleUserKicked = (data) => {
@@ -154,26 +163,35 @@ function PokerSessionPage() {
   }, [participantList, voteList, room, navigate, userID]);
 
   const handleJoin = async ({ name, role }) => {
-    const response = await fetch("http://localhost:3001/api/sessions/addUser", {
-      method: "POST",
-      body: JSON.stringify({
-        sessionID: room,
-        name,
-        role,
-        vote: "0",
-        voteMessage: "Participant has not voted",
-      }),
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `http://localhost:3001/api/sessions/${room}/addUser`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          sessionID: room,
+          name,
+          role,
+          vote: "0",
+          voteMessage: "Participant has not voted",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
     const json = await response.json();
+    console.log("show votes:", showVotes);
 
     if (response.ok) {
       setSession(json.session);
       setUserID(json.userID);
       setUsername(name);
       setUserRole(role);
+      setSessionStatus(json.session.status);
+      if (role === "Observer" && json.session.status === "finished") {
+        console.log("here");
+        setShowVotes(true);
+      }
       setParticipantList(
         json.session.participants.map((participant) => ({
           id: participant._id,
@@ -193,13 +211,14 @@ function PokerSessionPage() {
       );
 
       socket.emit("join_room", {
+        room,
         name,
         role,
-        room,
         participantID: json.participantArrayID,
         voteID: json.voteArrayID,
         userID: json.userID,
       });
+      console.log("Joined session");
     } else {
       console.error("Failed to join session: ", json);
     }
@@ -210,7 +229,12 @@ function PokerSessionPage() {
       `http://localhost:3001/api/sessions/${room}/removeUser`,
       {
         method: "PATCH",
-        body: JSON.stringify({ id: room, userID, participantList, voteList }),
+        body: JSON.stringify({
+          sessionID: room,
+          userID,
+          participantList,
+          voteList,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -219,8 +243,9 @@ function PokerSessionPage() {
     const json = await response.json();
 
     if (response.ok) {
-      socket.emit("leave_room", { userID, username, userRole, room });
+      socket.emit("leave_room", { room, userID, username, userRole });
       navigate("/");
+      console.log("Left session");
     } else {
       console.error("Failed to leave session ", json);
     }
@@ -233,7 +258,7 @@ function PokerSessionPage() {
         `http://localhost:3001/api/sessions/${room}/updateUserHasVoted`,
         {
           method: "PATCH",
-          body: JSON.stringify({ id: room, userID, userVote, voteList }),
+          body: JSON.stringify({ sessionID: room, userID, userVote, voteList }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -241,9 +266,9 @@ function PokerSessionPage() {
       );
       const json = await response.json();
       if (response.ok) {
-        console.log("user vote updated");
+        console.log("Vote updated");
       } else {
-        console.error("couldn't update user vote", json);
+        console.error("Couldn't update user vote", json);
       }
 
       setVoteList(
@@ -271,7 +296,7 @@ function PokerSessionPage() {
       );
     }
     setVote(userVote);
-    socket.emit("select_vote", { userID, room, vote: userVote });
+    socket.emit("select_vote", { room, userID, vote: userVote });
   };
 
   const handleRefresh = async () => {
@@ -286,7 +311,7 @@ function PokerSessionPage() {
           role: participant.role,
         })),
       );
-      
+
       setVoteList(
         json.votes.map((voter) => ({
           id: voter._id,
@@ -297,8 +322,10 @@ function PokerSessionPage() {
         })),
       );
       setSession(json);
+      setSessionStatus(json.status);
+      console.log("Refreshed session");
     } else {
-      console.error("Failed to fetch session");
+      console.error("Failed to refresh session");
     }
   };
 
@@ -309,7 +336,7 @@ function PokerSessionPage() {
       {
         method: "PATCH",
         body: JSON.stringify({
-          id: room,
+          sessionID: room,
           session,
           participantList,
           oldVoteList: voteList,
@@ -320,6 +347,7 @@ function PokerSessionPage() {
     await response.json();
     if (response.ok) {
       socket.emit("show_votes", { room });
+      console.log("Showed votes");
       handleRefresh();
     } else {
       console.error("Failed to update session");
@@ -331,13 +359,13 @@ function PokerSessionPage() {
       `http://localhost:3001/api/sessions/${room}/clearVotes`,
       {
         method: "PATCH",
-        body: JSON.stringify({ id: room, voteList }),
+        body: JSON.stringify({ sessionID: room, voteList }),
         headers: { "Content-Type": "application/json" },
       },
     );
     await response.json();
     if (response.ok) {
-      console.log("votes cleared");
+      console.log("Reset votes");
     } else {
       console.error("Failed to clear votes");
     }
@@ -351,6 +379,8 @@ function PokerSessionPage() {
     );
     setUserVoted(false);
     setShowVotes(false);
+    setSessionStatus("voting");
+    setVote("0");
     socket.emit("reset_votes", { room });
   };
 
@@ -360,7 +390,7 @@ function PokerSessionPage() {
       {
         method: "PATCH",
         body: JSON.stringify({
-          id: room,
+          sessionID: room,
           userID: kickedUserID,
           participantList,
           voteList,
@@ -380,6 +410,7 @@ function PokerSessionPage() {
     );
 
     if (response.ok) {
+      console.log("Kicked user");
       socket.emit("kick_user", { room, userID: kickedUserID });
     } else {
       console.error("Failed to kick user ", json);
@@ -387,34 +418,83 @@ function PokerSessionPage() {
   };
 
   return (
-    <div className="App">
+    <div className="poker-session">
       <NameForm onJoin={handleJoin} />
-      <h2>Room: {room}</h2>
-      <h3>Hello, {username}</h3>
-      <h3>Role: {userRole}</h3>
-      <ParticipantList
-        voteList={voteList}
-        showVotes={showVotes}
-        userID={userID}
-        onKick={handleKick}
-      />
-      <VoteButtonGroup selectVote={handleVoteUpdate} />
-      <LeaveSessionAlert leaveSession={handleLeave}></LeaveSessionAlert>
-      {userVoted && <h3>Vote: {vote}</h3>}
-      <Button
-        onClick={handleShowVotes}
-        variant="contained"
-        disabled={showVotes}
-      >
-        Show Votes
-      </Button>
-      <button onClick={handleResetVotes}>New Round</button>
-      {showVotes && (
-        <div className="votingStats">
-          <h4>Majority vote: {session.majorityVote}</h4>
-          <h4>Average vote: {session.averageVote}</h4>
-        </div>
-      )}
+      <div className="welcome-info">
+        <h3>Hello, {username}</h3>
+        <h4>Role: {userRole}</h4>
+        <h4>Room ID: {room}</h4>
+        <h4>Session Status: {sessionStatus}</h4>
+        <LeaveSessionButton leaveSession={handleLeave}></LeaveSessionButton>
+      </div>
+      <div className="user-vote">
+        <h3>Your Vote</h3>
+        <h2>{vote}</h2>
+      </div>
+      <div className="session-link">
+        <h3>Room Invite</h3>
+        <h5>Click this button to copy the link to the session:</h5>
+        <Button
+          variant="outlined"
+          onClick={() =>
+            navigator.clipboard.writeText(
+              `http://localhost:3000/session/${room}`,
+            )
+          }
+        >
+          Copy link
+        </Button>
+      </div>
+      <div className="participant-list">
+        <h3>Participants in session</h3>
+        <ParticipantList
+          voteList={voteList}
+          showVotes={showVotes}
+          userID={userID}
+          onKick={handleKick}
+        />
+      </div>
+      <div className="session-buttons">
+        <Stack spacing={2} direction="column">
+          <Button
+            onClick={handleShowVotes}
+            variant="contained"
+            disabled={showVotes}
+          >
+            <span className="material-symbols-outlined">visibility</span>
+            Show Votes
+          </Button>
+          <Divider />
+          <Button
+            onClick={handleResetVotes}
+            variant="contained"
+            disabled={!showVotes}
+          >
+            <span className="material-symbols-outlined">add</span>
+            New Round
+          </Button>
+        </Stack>
+      </div>
+      <div className="voting-stats">
+        <h3>Stats</h3>
+        {showVotes ? (
+          <>
+            <h4>Majority vote: {session.majorityVote}</h4>
+            <h4>Average vote: {session.averageVote}</h4>
+          </>
+        ) : (
+          <>
+            <h4>Reveal Votes to calculate vote stats</h4>
+          </>
+        )}
+      </div>
+      <div className="vote-buttons">
+        <VoteButtonGroup
+          selectVote={handleVoteUpdate}
+          userRole={userRole}
+          disabled={showVotes}
+        />
+      </div>
     </div>
   );
 }

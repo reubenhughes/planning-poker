@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-function LeaveSessionAlert({ leaveSession }) {
+function LeaveSessionButton({ leaveSession }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -24,7 +24,7 @@ function LeaveSessionAlert({ leaveSession }) {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button variant="contained" onClick={handleClickOpen}>
         Leave Session
       </Button>
       <Dialog
@@ -50,4 +50,4 @@ function LeaveSessionAlert({ leaveSession }) {
   );
 }
 
-export default LeaveSessionAlert;
+export default LeaveSessionButton;

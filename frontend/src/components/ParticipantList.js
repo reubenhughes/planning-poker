@@ -4,6 +4,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
+import Button from "@mui/material/Button";
 
 function ParticipantList({ voteList, showVotes, userID, onKick }) {
   const handleClick = (kickedUserID) => {
@@ -12,12 +13,18 @@ function ParticipantList({ voteList, showVotes, userID, onKick }) {
   };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxHeight: 450,
+        overflow: "auto",
+        "& ul": { padding: 0 },
+      }}
+    >
       <nav aria-label="main mailbox folders">
-        <ListSubheader>Participants in the Session</ListSubheader>
         <List>
           {voteList.map((voter) => (
-            <ListItem disablePadding key={voter.id}>
+            <ListItem key={voter.id}>
               {showVotes ? (
                 <ListItemText primary={voter.name} secondary={voter.vote} />
               ) : (
@@ -27,7 +34,13 @@ function ParticipantList({ voteList, showVotes, userID, onKick }) {
                 />
               )}
               {voter.userID !== userID && (
-                <button onClick={() => handleClick(voter.userID)}>Kick</button>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => handleClick(voter.userID)}
+                >
+                  Kick
+                </Button>
               )}
             </ListItem>
           ))}
