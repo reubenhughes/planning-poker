@@ -1,16 +1,9 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 
 function HomePage() {
-  const [room, setRoom] = useState("");
   const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate(`/session/${room}`);
-  };
-
+  
   const handleClick = () => {
     navigate("/create-session");
   };

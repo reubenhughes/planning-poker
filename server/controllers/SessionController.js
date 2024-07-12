@@ -3,6 +3,7 @@ const Mongoose = require("mongoose");
 
 const getSession = async (req, res) => {
   const { id } = req.params;
+  console.log("req.params:", req.params)
   try {
     const session = await Session.findById(id);
     if (!session) {

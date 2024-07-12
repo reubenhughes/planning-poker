@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
 import Button from "@mui/material/Button";
 
 function ParticipantList({ voteList, showVotes, userID, onKick }) {
@@ -26,11 +25,20 @@ function ParticipantList({ voteList, showVotes, userID, onKick }) {
           {voteList.map((voter) => (
             <ListItem key={voter.id}>
               {showVotes ? (
-                <ListItemText primary={voter.name} secondary={voter.vote} />
+                <ListItemText
+                primary={voter.name}
+                secondary={voter.vote}
+                secondaryTypographyProps={{
+                    color: "var(--text-color)"
+                }}
+                 />
               ) : (
                 <ListItemText
                   primary={voter.name}
                   secondary={voter.voteMessage}
+                  secondaryTypographyProps={{
+                    color: "var(--text-color)"
+                }}
                 />
               )}
               {voter.userID !== userID && (
