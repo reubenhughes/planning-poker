@@ -102,7 +102,7 @@ describe("Session Controller", () => {
           userID: participantId,
           name: "John Doe",
           vote: "5",
-          voteMessage: "Voting",
+          voteMessage: "Participant has not voted",
         },
       ],
       status: "voting",
