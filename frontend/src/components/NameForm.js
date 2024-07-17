@@ -78,7 +78,6 @@ function NameForm({ onJoin }) {
                 control={
                   <Radio
                     sx={{
-                      color: "var(--accent)",
                       "&.Mui-checked": {
                         color: "var(--secondary)",
                       },
@@ -92,7 +91,6 @@ function NameForm({ onJoin }) {
                 control={
                   <Radio
                     sx={{
-                      color: "var(--accent)",
                       "&.Mui-checked": {
                         color: "var(--secondary)",
                       },

@@ -55,7 +55,7 @@ header a {
 }
 
 .home h3 {
-  background: #f4fbf5;
+  background: var(--card-subheader-color);
   margin: auto;
   padding: 10px 10px;
   border-top-right-radius: 5px;
@@ -68,8 +68,8 @@ header a {
 }
 
 .begin-planning {
-  background: #f4fbf5;
-  color: #333;
+  background: var(--card-color);
+  color: var(--text-color);
   border-radius: 5px;
 }
 
@@ -79,6 +79,7 @@ header a {
 }
 
 .poker-session {
+  background: var(--bg-colour);
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 20px;
@@ -205,13 +206,13 @@ header a {
 }
 
 .create-session div {
-  background: #f4fbf5;
-  color: #333;
+  background: var(--card-color);
+  color: var(--text-color);
   border-radius: 5px;
 }
 
 .create-session h3 {
-  background: #ffffff;
+  background: var(--card-subheader-color);
   margin: auto;
   padding: 10px 10px;
   border-top-right-radius: 5px;

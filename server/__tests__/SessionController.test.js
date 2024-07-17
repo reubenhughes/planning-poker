@@ -85,7 +85,7 @@ describe("Session Controller", () => {
       name: "John Doe",
       role: "Voter",
       vote: "5",
-      voteMessage: "Voting",
+      voteMessage: "Participant has not voted",
     });
     expect(res.status).toBe(200);
     expect(res.body.session.participants.length).toBe(1);
@@ -131,7 +131,7 @@ describe("Session Controller", () => {
           userID: participantId,
           name: "John Doe",
           vote: "0",
-          voteMessage: "Not voted",
+          voteMessage: "Participant has not voted",
         },
       ],
       status: "voting",
@@ -157,7 +157,7 @@ describe("Session Controller", () => {
           userID: new mongoose.Types.ObjectId(),
           name: "John Doe",
           vote: "5",
-          voteMessage: "Voted",
+          voteMessage: "Participant has not voted",
         },
       ],
       status: "finished",
