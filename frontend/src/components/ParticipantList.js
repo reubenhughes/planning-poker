@@ -26,19 +26,19 @@ function ParticipantList({ voteList, showVotes, userID, onKick }) {
             <ListItem key={voter.id}>
               {showVotes ? (
                 <ListItemText
-                primary={voter.name}
-                secondary={voter.vote}
-                secondaryTypographyProps={{
-                    color: "var(--text-color)"
-                }}
-                 />
+                  primary={voter.name}
+                  secondary={voter.vote}
+                  secondaryTypographyProps={{
+                    color: "var(--text-color)",
+                  }}
+                />
               ) : (
                 <ListItemText
                   primary={voter.name}
                   secondary={voter.voteMessage}
                   secondaryTypographyProps={{
-                    color: "var(--text-color)"
-                }}
+                    color: "var(--text-color)",
+                  }}
                 />
               )}
               {voter.userID !== userID && (

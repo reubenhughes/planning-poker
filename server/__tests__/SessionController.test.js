@@ -85,7 +85,7 @@ describe("Session Controller", () => {
       name: "John Doe",
       role: "Voter",
       vote: "5",
-      voteMessage: "Voting",
+      voteMessage: "Participant has not voted",
     });
     expect(res.status).toBe(200);
     expect(res.body.session.participants.length).toBe(1);
@@ -94,8 +94,17 @@ describe("Session Controller", () => {
   it("should remove a user from a session", async () => {
     const participantId = new mongoose.Types.ObjectId();
     const session = await Session.create({
-      participants: [{ userID: participantId, name: "John Doe", role: "Voter" }],
-      votes: [{ userID: participantId, name: "John Doe", vote: "5", voteMessage: "Voting" }],
+      participants: [
+        { userID: participantId, name: "John Doe", role: "Voter" },
+      ],
+      votes: [
+        {
+          userID: participantId,
+          name: "John Doe",
+          vote: "5",
+          voteMessage: "Participant has not voted",
+        },
+      ],
       status: "voting",
       majorityVote: "5",
       averageVote: "5",
@@ -114,8 +123,17 @@ describe("Session Controller", () => {
   it("should update user vote", async () => {
     const participantId = new mongoose.Types.ObjectId();
     const session = await Session.create({
-      participants: [{ userID: participantId, name: "John Doe", role: "Voter" }],
-      votes: [{ userID: participantId, name: "John Doe", vote: "0", voteMessage: "Not voted" }],
+      participants: [
+        { userID: participantId, name: "John Doe", role: "Voter" },
+      ],
+      votes: [
+        {
+          userID: participantId,
+          name: "John Doe",
+          vote: "0",
+          voteMessage: "Participant has not voted",
+        },
+      ],
       status: "voting",
       majorityVote: "0",
       averageVote: "0",
@@ -134,7 +152,14 @@ describe("Session Controller", () => {
   it("should clear votes", async () => {
     const session = await Session.create({
       participants: [],
-      votes: [{ userID: new mongoose.Types.ObjectId(), name: "John Doe", vote: "5", voteMessage: "Voted" }],
+      votes: [
+        {
+          userID: new mongoose.Types.ObjectId(),
+          name: "John Doe",
+          vote: "5",
+          voteMessage: "Participant has not voted",
+        },
+      ],
       status: "finished",
       majorityVote: "5",
       averageVote: "5",

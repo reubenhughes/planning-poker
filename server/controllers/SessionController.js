@@ -3,7 +3,7 @@ const Mongoose = require("mongoose");
 
 const getSession = async (req, res) => {
   const { id } = req.params;
-  console.log("req.params:", req.params)
+  console.log("req.params:", req.params);
   try {
     const session = await Session.findById(id);
     if (!session) {
@@ -119,6 +119,7 @@ const updateSession = async (req, res) => {
         averageVote: averageVote,
         createdAt: session.createdAt,
       },
+      { new: true }
     );
     res.status(200).json(updatedSession);
   } catch (error) {
@@ -167,7 +168,7 @@ const removeUserFromSession = async (req, res) => {
   const updatedParticipantList = participantList.filter(
     (participant) => participant.userID !== userID,
   );
-  const updatedVoteList = voteList.filter((vote) => vote.userID !== userID);
+  const updatedVoteList = voteList.filter((voter) => voter.userID !== userID);
   try {
     const updatedSession = await Session.findOneAndUpdate(
       { _id: sessionID },
@@ -175,6 +176,7 @@ const removeUserFromSession = async (req, res) => {
         participants: updatedParticipantList,
         votes: updatedVoteList,
       },
+      { new: true },
     );
     console.log("updated session:", updatedSession);
     res.status(200).json(updatedSession);
@@ -206,6 +208,7 @@ const updateUserHasVoted = async (req, res) => {
       {
         votes: updatedVoteList,
       },
+      { new: true },
     );
     console.log("updated session:", updatedSession);
     res.status(200).json(updatedSession);
@@ -229,6 +232,7 @@ const clearVotes = async (req, res) => {
         votes: updatedVoteList,
         status: "voting",
       },
+      { new: true },
     );
     console.log("Cleared votes");
     res.status(200).json(session);

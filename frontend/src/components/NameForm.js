@@ -45,7 +45,7 @@ function NameForm({ onJoin }) {
         }}
       >
         <Box display="grid" margin="10px 50px">
-          <DialogTitle sx={{color: "#333"}}>Enter Name</DialogTitle>
+          <DialogTitle sx={{ color: "#333" }}>Enter Name</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Please enter your name to join the planning poker session.
@@ -75,32 +75,42 @@ function NameForm({ onJoin }) {
             >
               <FormControlLabel
                 value="Voter"
-                control={<Radio sx={{
-                    color: "var(--accent)",
-                    '&.Mui-checked': {
-                      color: "var(--secondary)",
-                    },
-                  }}
-                  />}
+                control={
+                  <Radio
+                    sx={{
+                      "&.Mui-checked": {
+                        color: "var(--secondary)",
+                      },
+                    }}
+                  />
+                }
                 label="Voter"
               />
               <FormControlLabel
                 value="Observer"
-                control={<Radio sx={{
-                    color: "var(--accent)",
-                    '&.Mui-checked': {
-                      color: "var(--secondary)",
-                    },
-                }}
-                />}
+                control={
+                  <Radio
+                    sx={{
+                      "&.Mui-checked": {
+                        color: "var(--secondary)",
+                      },
+                    }}
+                  />
+                }
                 label="Observer"
               />
             </RadioGroup>
           </FormControl>
           <DialogActions>
-            <Button sx={{
-                background: "var(--secondary)"
-            }} variant="contained" type="submit">Join Session</Button>
+            <Button
+              sx={{
+                background: "var(--secondary)",
+              }}
+              variant="contained"
+              type="submit"
+            >
+              Join Session
+            </Button>
           </DialogActions>
         </Box>
       </Dialog>
