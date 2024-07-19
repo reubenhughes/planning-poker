@@ -19,12 +19,14 @@ const getSession = async (req, res) => {
 };
 
 const createSession = async (req, res) => {
-  const { participants, votes, voteDeck, status, majorityVote, averageVote, createdAt } =
+  const { participants, votes, title, description, voteDeck, status, majorityVote, averageVote, createdAt } =
     req.body;
   try {
     const session = await Session.create({
       participants,
       votes,
+      title,
+      description,
       voteDeck,
       status,
       majorityVote,
@@ -147,7 +149,7 @@ const addUserToSession = async (req, res) => {
 
     if (!session.participants.includes(userID)) {
       session.participants.push(userParticipantObj);
-      if (role === "Voter") {
+      if (role === "voter") {
         session.votes.push(userVoteObj);
       }
       await session.save();

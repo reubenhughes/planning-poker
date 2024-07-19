@@ -17,7 +17,7 @@ function PokerSessionPage() {
   const navigate = useNavigate();
   const [userID, setUserID] = useState("");
   const [username, setUsername] = useState("");
-  const [userRole, setUserRole] = useState("Voter");
+  const [userRole, setUserRole] = useState("voter");
   const [session, setSession] = useState("");
   const [participantList, setParticipantList] = useState([]);
   const [voteList, setVoteList] = useState([]);
@@ -38,7 +38,7 @@ function PokerSessionPage() {
           role: data.role,
         },
       ]);
-      if (data.role === "Voter") {
+      if (data.role === "voter") {
         setVoteList((prevUserList) => [
           ...prevUserList,
           {
@@ -59,7 +59,7 @@ function PokerSessionPage() {
           (participant) => participant.userID !== data.userID,
         ),
       );
-      if (data.userRole === "Voter") {
+      if (data.userRole === "voter") {
         setVoteList((prevUserList) =>
           prevUserList.filter((voter) => voter.userID !== data.userID),
         );
@@ -303,7 +303,7 @@ function PokerSessionPage() {
           } else {
             console.error("Couldn't update user vote", json);
           }
-          
+
       setVoteList(
         voteList.map((voter) => {
           if (voter.userID === userID) {
@@ -441,9 +441,20 @@ function PokerSessionPage() {
       <NameForm onJoin={handleJoin} />
       <div className="welcome-info">
         <h3>Hello, {username}</h3>
+        {session.title ? 
+            <h4>Session Title: {session.title}</h4>
+            :
+            <h4>Session Title: None</h4>
+        }
+        <h4>Session Description:</h4>
+        {session.description ?
+            <h5>{session.description}</h5>
+            :
+            <h5>None</h5>
+        }
+        <Divider variant="middle" />
+        <h4>Status: {sessionStatus}</h4>
         <h4>Role: {userRole}</h4>
-        <h4>Room ID: {room}</h4>
-        <h4>Session Status: {sessionStatus}</h4>
         <LeaveSessionButton leaveSession={handleLeave}></LeaveSessionButton>
       </div>
       <div className="user-vote">
@@ -452,6 +463,7 @@ function PokerSessionPage() {
       </div>
       <div className="session-link">
         <h3>Room Invite</h3>
+        <h4>Room ID: {room}</h4>
         <h5>Click this button to copy the link to the session:</h5>
         <Button
           variant="outlined"

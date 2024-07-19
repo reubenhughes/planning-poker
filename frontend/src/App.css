@@ -126,6 +126,10 @@ header a {
   background: var(--secondary);
 }
 
+.welcome-info h5 {
+  color: var(--accent)
+}
+
 .user-vote {
   grid-column: 2;
   grid-row: 1;
@@ -241,4 +245,8 @@ header a {
 
 .session-options h4 {
     margin: 10px;
+}
+
+.session-options h5 {
+  padding-left: 15px;
 }

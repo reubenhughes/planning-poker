@@ -6,7 +6,7 @@ function VoteButtonGroup({ selectVote, voteDeck, userRole, disabled }) {
 
   return (
     <div>
-      {userRole === "Voter" ? (
+      {userRole === "voter" ? (
         <Stack spacing={4} useFlexGap flexWrap="wrap" direction="row">
           {voteDeck.map((vote) => (
             <Button

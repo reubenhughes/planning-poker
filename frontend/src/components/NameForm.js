@@ -16,7 +16,7 @@ import Box from "@mui/material/Box";
 
 function NameForm({ onJoin }) {
   const [open, setOpen] = React.useState(true);
-  const [role, setRole] = React.useState("Voter");
+  const [role, setRole] = React.useState("voter");
 
   const handleChange = (event) => {
     setRole(event.target.value);
@@ -74,7 +74,7 @@ function NameForm({ onJoin }) {
               onChange={handleChange}
             >
               <FormControlLabel
-                value="Voter"
+                value="voter"
                 control={
                   <Radio
                     sx={{
@@ -84,10 +84,10 @@ function NameForm({ onJoin }) {
                     }}
                   />
                 }
-                label="Voter"
+                label="voter"
               />
               <FormControlLabel
-                value="Observer"
+                value="observer"
                 control={
                   <Radio
                     sx={{
@@ -97,7 +97,7 @@ function NameForm({ onJoin }) {
                     }}
                   />
                 }
-                label="Observer"
+                label="observer"
               />
             </RadioGroup>
           </FormControl>
