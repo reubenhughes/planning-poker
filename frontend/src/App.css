@@ -127,7 +127,7 @@ header a {
 }
 
 .welcome-info h5 {
-  color: var(--accent)
+  color: var(--accent);
 }
 
 .user-vote {
@@ -244,7 +244,7 @@ header a {
 }
 
 .session-options h4 {
-    margin: 10px;
+  margin: 10px;
 }
 
 .session-options h5 {

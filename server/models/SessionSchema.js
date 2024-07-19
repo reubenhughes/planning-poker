@@ -33,10 +33,10 @@ const SessionSchema = new Schema({
   participants: [participantSchema],
   votes: [voteSchema],
   title: {
-    type: String
+    type: String,
   },
   description: {
-    type: String
+    type: String,
   },
   voteDeck: {
     type: Array,
