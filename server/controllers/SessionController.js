@@ -19,12 +19,13 @@ const getSession = async (req, res) => {
 };
 
 const createSession = async (req, res) => {
-  const { participants, votes, status, majorityVote, averageVote, createdAt } =
+  const { participants, votes, voteDeck, status, majorityVote, averageVote, createdAt } =
     req.body;
   try {
     const session = await Session.create({
       participants,
       votes,
+      voteDeck,
       status,
       majorityVote,
       averageVote,
@@ -136,6 +137,7 @@ const addUserToSession = async (req, res) => {
   const userParticipantObj = { _id: participantArrayID, userID, name, role };
   const userVoteObj = { _id: voteArrayID, userID, name, vote, voteMessage };
   console.log("user added to session");
+  console.log("session id:", sessionID)
 
   try {
     const session = await Session.findById(sessionID);
@@ -145,7 +147,7 @@ const addUserToSession = async (req, res) => {
 
     if (!session.participants.includes(userID)) {
       session.participants.push(userParticipantObj);
-      if (role == "Voter") {
+      if (role === "Voter") {
         session.votes.push(userVoteObj);
       }
       await session.save();

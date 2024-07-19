@@ -238,3 +238,7 @@ header a {
   grid-column: 2;
   grid-row: 1;
 }
+
+.session-options h4 {
+    margin: 10px;
+}

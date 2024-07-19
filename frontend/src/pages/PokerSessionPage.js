@@ -25,6 +25,7 @@ function PokerSessionPage() {
   const [userVoted, setUserVoted] = useState(false);
   const [showVotes, setShowVotes] = useState(false);
   const [sessionStatus, setSessionStatus] = useState("");
+  const [voteDeck, setVoteDeck] = useState([])
 
   useEffect(() => {
     const handleUserJoined = (data) => {
@@ -187,9 +188,10 @@ function PokerSessionPage() {
       setUserID(json.userID);
       setUsername(name);
       setUserRole(role);
+      setVoteDeck(json.session.voteDeck)
+      console.log("vote deck:", json.session.voteDeck)
       setSessionStatus(json.session.status);
       if (role === "Observer" && json.session.status === "finished") {
-        console.log("here");
         setShowVotes(true);
       }
       setParticipantList(
@@ -285,6 +287,23 @@ function PokerSessionPage() {
         }),
       );
     } else {
+        const response = await fetch(
+            `http://localhost:3001/api/sessions/${room}/updateUserHasVoted`,
+            {
+              method: "PATCH",
+              body: JSON.stringify({ sessionID: room, userID, userVote, voteList }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            },
+          );
+          const json = await response.json();
+          if (response.ok) {
+            console.log("Vote updated");
+          } else {
+            console.error("Couldn't update user vote", json);
+          }
+          
       setVoteList(
         voteList.map((voter) => {
           if (voter.userID === userID) {
@@ -492,6 +511,7 @@ function PokerSessionPage() {
         <VoteButtonGroup
           selectVote={handleVoteUpdate}
           userRole={userRole}
+          voteDeck={voteDeck}
           disabled={showVotes}
         />
       </div>
