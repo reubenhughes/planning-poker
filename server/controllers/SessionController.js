@@ -19,12 +19,24 @@ const getSession = async (req, res) => {
 };
 
 const createSession = async (req, res) => {
-  const { participants, votes, status, majorityVote, averageVote, createdAt } =
-    req.body;
+  const {
+    participants,
+    votes,
+    title,
+    description,
+    voteDeck,
+    status,
+    majorityVote,
+    averageVote,
+    createdAt,
+  } = req.body;
   try {
     const session = await Session.create({
       participants,
       votes,
+      title,
+      description,
+      voteDeck,
       status,
       majorityVote,
       averageVote,
@@ -119,7 +131,7 @@ const updateSession = async (req, res) => {
         averageVote: averageVote,
         createdAt: session.createdAt,
       },
-      { new: true }
+      { new: true },
     );
     res.status(200).json(updatedSession);
   } catch (error) {
@@ -136,6 +148,7 @@ const addUserToSession = async (req, res) => {
   const userParticipantObj = { _id: participantArrayID, userID, name, role };
   const userVoteObj = { _id: voteArrayID, userID, name, vote, voteMessage };
   console.log("user added to session");
+  console.log("session id:", sessionID);
 
   try {
     const session = await Session.findById(sessionID);
@@ -145,7 +158,7 @@ const addUserToSession = async (req, res) => {
 
     if (!session.participants.includes(userID)) {
       session.participants.push(userParticipantObj);
-      if (role == "Voter") {
+      if (role === "voter") {
         session.votes.push(userVoteObj);
       }
       await session.save();

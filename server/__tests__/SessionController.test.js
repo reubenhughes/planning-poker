@@ -83,7 +83,7 @@ describe("Session Controller", () => {
     const res = await request(app).put("/session/addUser").send({
       sessionID: session._id,
       name: "John Doe",
-      role: "Voter",
+      role: "voter",
       vote: "5",
       voteMessage: "Participant has not voted",
     });
@@ -95,7 +95,7 @@ describe("Session Controller", () => {
     const participantId = new mongoose.Types.ObjectId();
     const session = await Session.create({
       participants: [
-        { userID: participantId, name: "John Doe", role: "Voter" },
+        { userID: participantId, name: "John Doe", role: "voter" },
       ],
       votes: [
         {
@@ -124,7 +124,7 @@ describe("Session Controller", () => {
     const participantId = new mongoose.Types.ObjectId();
     const session = await Session.create({
       participants: [
-        { userID: participantId, name: "John Doe", role: "Voter" },
+        { userID: participantId, name: "John Doe", role: "voter" },
       ],
       votes: [
         {
