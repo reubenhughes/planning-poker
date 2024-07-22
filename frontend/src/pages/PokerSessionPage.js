@@ -2,31 +2,38 @@ import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import NameForm from "../components/NameForm";
-import ParticipantList from "../components/ParticipantList";
-import LeaveSessionButton from "../components/LeaveSessionButton";
-import VoteButtonGroup from "../components/VoteButtonGroup";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 
+// imports from components folder
+import NameForm from "../components/NameForm";
+import LeaveSessionButton from "../components/LeaveSessionButton";
+import ParticipantList from "../components/ParticipantList";
+import VoteButtonGroup from "../components/VoteButtonGroup";
+
 const socket = io.connect("http://localhost:3001");
 
 function PokerSessionPage() {
+    const navigate = useNavigate();
   const { room } = useParams();
-  const navigate = useNavigate();
+
+  // user variables
   const [userID, setUserID] = useState("");
   const [username, setUsername] = useState("");
   const [userRole, setUserRole] = useState("voter");
-  const [session, setSession] = useState("");
-  const [participantList, setParticipantList] = useState([]);
-  const [voteList, setVoteList] = useState([]);
-  const [vote, setVote] = useState("0");
   const [userVoted, setUserVoted] = useState(false);
-  const [showVotes, setShowVotes] = useState(false);
-  const [sessionStatus, setSessionStatus] = useState("");
-  const [voteDeck, setVoteDeck] = useState([]);
+  const [vote, setVote] = useState("0");
 
+  // session variables
+  const [participantList, setParticipantList] = useState([]);
+  const [session, setSession] = useState("");
+  const [sessionStatus, setSessionStatus] = useState("");
+  const [showVotes, setShowVotes] = useState(false);
+  const [voteDeck, setVoteDeck] = useState([]);
+  const [voteList, setVoteList] = useState([]);
+
+  // listens for web socket messages
   useEffect(() => {
     const handleUserJoined = (data) => {
       setParticipantList((prevUserList) => [
@@ -153,6 +160,7 @@ function PokerSessionPage() {
     socket.on("votes_reset", handleVotesReset);
     socket.on("user_kicked", handleUserKicked);
 
+    // cleans up sockets after disconnect
     return () => {
       socket.off("user_joined", handleUserJoined);
       socket.off("user_left", handleUserLeft);
@@ -161,8 +169,9 @@ function PokerSessionPage() {
       socket.off("votes_reset", handleVotesReset);
       socket.off("user_kicked", handleUserKicked);
     };
-  }, [participantList, voteList, room, navigate, userID]);
+  }, [navigate, room, userID, voteList]);
 
+  // sends web socket messages on actions from the user
   const handleJoin = async ({ name, role }) => {
     const response = await fetch(
       `http://localhost:3001/api/sessions/${room}/addUser`,
@@ -439,23 +448,18 @@ function PokerSessionPage() {
   return (
     <div className="poker-session">
       <NameForm onJoin={handleJoin} />
-      <div className="welcome-info">
-        <h3>Hello, {username}</h3>
-        {session.title ? (
-          <h4>Session Title: {session.title}</h4>
-        ) : (
-          <h4>Session Title: None</h4>
-        )}
-        <h4>Session Description:</h4>
-        {session.description ? <h5>{session.description}</h5> : <h5>None</h5>}
+      <div className="room-info">
+        <h3>{session.title}</h3>
+        <h4>Description:</h4>
+        <h5>{session.description}</h5>
         <Divider variant="middle" />
         <h4>Status: {sessionStatus}</h4>
-        <h4>Role: {userRole}</h4>
         <LeaveSessionButton leaveSession={handleLeave}></LeaveSessionButton>
       </div>
-      <div className="user-vote">
-        <h3>Your Vote</h3>
-        <h2>{vote}</h2>
+      <div className="user-info">
+        <h3>Hello, {username}</h3>
+        <h4>Role: {userRole}</h4>
+        {userRole === "voter" && <h4>Vote: {vote}</h4>}
       </div>
       <div className="session-link">
         <h3>Room Invite</h3>

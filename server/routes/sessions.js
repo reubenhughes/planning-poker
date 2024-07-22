@@ -10,16 +10,16 @@ const {
   clearVotes,
 } = require("../controllers/SessionController");
 
-// GET session
+// Get session
 router.get("/:id", getSession);
 
-// CREATE session
+// Create session
 router.post("/", createSession);
 
-// UPDATE session
+// Update session
 router.patch("/:id/updateSession", updateSession);
 
-// ADD user to session
+// Add user to session
 router.patch("/:id/addUser", addUserToSession);
 
 // Remove user from session

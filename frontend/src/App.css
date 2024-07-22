@@ -4,6 +4,7 @@
 /* layout */
 :root {
   --bg-color: #31d3ab;
+  --bg-color-secondary: #27e1db;
   --text-color: #333;
   --primary: #31d3ab;
   --secondary: #7064dd;
@@ -13,6 +14,7 @@
 }
 [data-theme="dark"] {
   --bg-color: #040b05;
+  --bg-color-secondary: #040b05;
   --text-color: #f4fbf5;
   --primary: #2ccea6;
   --secondary: #2948ac;
@@ -21,14 +23,15 @@
   --card-color: #242727;
 }
 body {
-  background: var(--bg-color);
+  background: linear-gradient(var(--bg-color) 60%, var(--bg-color-secondary));
+  background-attachment: fixed;
   color: #030705;
   margin: 0;
   font-family: "Poppins", Arial, sans-serif;
 }
 
 header .container {
-  background: #f4fbf5;
+  background: var(--card-color);
   margin: 0 auto;
   padding: 5px 20px;
   border-bottom: 1px solid #bab8b8;
@@ -37,7 +40,7 @@ header .container {
   justify-content: space-between;
 }
 header a {
-  color: #333;
+  color: var(--text-color);
   text-decoration: none;
 }
 
@@ -91,14 +94,6 @@ header a {
   border-radius: 5px;
 }
 
-.poker-session h2 {
-  padding-top: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-color);
-}
-
 .poker-session h3 {
   background: var(--card-subheader-color);
   margin: auto;
@@ -116,21 +111,21 @@ header a {
   margin: 10px;
 }
 
-.welcome-info {
+.room-info {
   grid-column: 1;
   grid-row: 1;
 }
 
-.welcome-info Button {
+.room-info Button {
   margin: 10px;
   background: var(--secondary);
 }
 
-.welcome-info h5 {
+.room-info h5 {
   color: var(--accent);
 }
 
-.user-vote {
+.user-info {
   grid-column: 2;
   grid-row: 1;
 }
@@ -142,7 +137,7 @@ header a {
 
 .session-link Button {
   margin: 10px;
-  color: var(--secondary);
+  color: var(--primary);
 }
 
 .participant-list {
@@ -249,4 +244,14 @@ header a {
 
 .session-options h5 {
   padding-left: 15px;
+}
+
+.not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.not-found h2 {
+  color: var(--text-color)
 }

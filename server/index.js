@@ -1,20 +1,20 @@
 require("dotenv").config();
 
-const express = require("express");
 const app = express();
-const http = require("http");
-const { Server } = require("socket.io");
 const cors = require("cors");
+const express = require("express");
+const http = require("http");
 const mongoose = require("mongoose");
+const { Server } = require("socket.io");
 
+// routes
 const sessionRoutes = require("./routes/sessions");
-const userRoutes = require("./routes/users");
 
 app.use(cors());
 app.use(express.json());
 app.use("/api/sessions", sessionRoutes);
-app.use("/api/users", userRoutes);
 
+// creates the server
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -23,6 +23,7 @@ const io = new Server(server, {
   },
 });
 
+// handles web socket messages
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 

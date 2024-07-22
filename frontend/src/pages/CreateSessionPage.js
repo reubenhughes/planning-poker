@@ -1,23 +1,27 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
+import TextField from "@mui/material/TextField";
 
 function CreateSessionPage() {
   const navigate = useNavigate();
+
+  // vote card decks, can easily add more decks here
   const standardDeck = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "?"];
   const fibonacciDeck = ["1", "2", "3", "5", "8", "13", "21", "34", "?"];
 
+  // session option variables
+  const [description, setDescription] = useState("No Description");
   const [selectValue, setSelectValue] = useState("Standard");
+  const [title, setTitle] = useState("Untitled Session");
   const [voteDeck, setVoteDeck] = useState(standardDeck);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
 
   const handleCreateSession = async () => {
     const session = {

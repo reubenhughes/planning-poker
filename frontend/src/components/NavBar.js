@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Switch from "@mui/material/Switch";
 
 const Navbar = () => {
+  // handles light and dark mode switching
   const switchTheme = (e) => {
     if (e.target.checked) {
       document.documentElement.setAttribute("data-theme", "dark");
