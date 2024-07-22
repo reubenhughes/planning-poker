@@ -38,17 +38,19 @@ beforeEach(async () => {
 
 describe("Session Controller", () => {
   it("should create a new session", async () => {
-    const res = await request(app).post("/session").send({
-      participants: [],
-      votes: [],
-      title: "Test Session",
-      description: "No Description",
-      voteDeck: ["1", "2", "3", "5", "8", "13", "21", "34", "?"],
-      status: "voting",
-      majorityVote: "0",
-      averageVote: "0",
-      createdAt: new Date(),
-    });
+    const res = await request(app)
+      .post("/session")
+      .send({
+        participants: [],
+        votes: [],
+        title: "Test Session",
+        description: "No Description",
+        voteDeck: ["1", "2", "3", "5", "8", "13", "21", "34", "?"],
+        status: "voting",
+        majorityVote: "0",
+        averageVote: "0",
+        createdAt: new Date(),
+      });
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty("_id");
   });

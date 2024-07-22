@@ -15,7 +15,7 @@ import VoteButtonGroup from "../components/VoteButtonGroup";
 const socket = io.connect("http://localhost:3001");
 
 function PokerSessionPage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { room } = useParams();
 
   // user variables
@@ -116,7 +116,6 @@ function PokerSessionPage() {
         );
         setSession(json);
         setSessionStatus(json.status);
-        console.log("session:", json);
       } else {
         console.error("Failed to fetch session");
       }
@@ -130,7 +129,6 @@ function PokerSessionPage() {
           voteMessage: "Participant has not voted",
         })),
       );
-      console.log("votes resetting");
       setShowVotes(false);
       setUserVoted(false);
       setSessionStatus("voting");
@@ -190,7 +188,6 @@ function PokerSessionPage() {
       },
     );
     const json = await response.json();
-    console.log("show votes:", showVotes);
 
     if (response.ok) {
       setSession(json.session);
@@ -198,7 +195,6 @@ function PokerSessionPage() {
       setUsername(name);
       setUserRole(role);
       setVoteDeck(json.session.voteDeck);
-      console.log("vote deck:", json.session.voteDeck);
       setSessionStatus(json.session.status);
       if (role === "Observer" && json.session.status === "finished") {
         setShowVotes(true);
@@ -229,7 +225,6 @@ function PokerSessionPage() {
         voteID: json.voteArrayID,
         userID: json.userID,
       });
-      console.log("Joined session");
     } else {
       console.error("Failed to join session: ", json);
     }
@@ -256,7 +251,6 @@ function PokerSessionPage() {
     if (response.ok) {
       socket.emit("leave_room", { room, userID, username, userRole });
       navigate("/");
-      console.log("Left session");
     } else {
       console.error("Failed to leave session ", json);
     }
@@ -277,7 +271,6 @@ function PokerSessionPage() {
       );
       const json = await response.json();
       if (response.ok) {
-        console.log("Vote updated");
       } else {
         console.error("Couldn't update user vote", json);
       }
@@ -308,7 +301,6 @@ function PokerSessionPage() {
       );
       const json = await response.json();
       if (response.ok) {
-        console.log("Vote updated");
       } else {
         console.error("Couldn't update user vote", json);
       }
@@ -351,7 +343,6 @@ function PokerSessionPage() {
       );
       setSession(json);
       setSessionStatus(json.status);
-      console.log("Refreshed session");
     } else {
       console.error("Failed to refresh session");
     }
@@ -375,7 +366,6 @@ function PokerSessionPage() {
     await response.json();
     if (response.ok) {
       socket.emit("show_votes", { room });
-      console.log("Showed votes");
       handleRefresh();
     } else {
       console.error("Failed to update session");
@@ -393,7 +383,6 @@ function PokerSessionPage() {
     );
     await response.json();
     if (response.ok) {
-      console.log("Reset votes");
     } else {
       console.error("Failed to clear votes");
     }

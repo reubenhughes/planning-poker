@@ -36,9 +36,6 @@ function CreateSessionPage() {
       createdAt: Date.now,
     };
 
-    console.log(session);
-    console.log("vote deck", voteDeck);
-
     const response = await fetch("http://localhost:3001/api/sessions/", {
       method: "POST",
       body: JSON.stringify(session),

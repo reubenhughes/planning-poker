@@ -3,7 +3,6 @@ const Session = require("../models/SessionSchema");
 
 const getSession = async (req, res) => {
   const { id } = req.params;
-  console.log("req.params:", req.params);
   try {
     const session = await Session.findById(id);
     if (!session) {
@@ -14,7 +13,8 @@ const getSession = async (req, res) => {
     res.status(200).json(session);
     console.log(`Fetched session ${id}`);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: error.message });
+    console.log(error);
   }
 };
 
@@ -43,10 +43,10 @@ const createSession = async (req, res) => {
       createdAt,
     });
     res.status(200).json(session);
-    console.log(`Created session ${res.params}`);
+    console.log(`Created session ${session._id}`);
   } catch (error) {
+    res.status(400).json({ message: error.message });
     console.log(error);
-    res.status(400).json({ error: error.message });
   }
 };
 
@@ -58,17 +58,9 @@ const updateSession = async (req, res) => {
   let mf = 1;
   let m = 0;
 
-  console.log("vote list:", oldVoteList);
-  console.log("session participants:", participantList);
-  console.log("session:", session);
-
   const voteList = oldVoteList
     .filter((voter) => voter.vote != "0" && voter.vote != "?")
     .map((voter) => voter.vote);
-  console.log("votes:", voteList);
-  console.log("votes length:", voteList.length);
-  console.log("voteList at position 0:", voteList[0]);
-  console.log("voteList at position 1:", voteList[1]);
 
   if (voteList.length == 0) {
     majorityVote = 0;
@@ -100,12 +92,6 @@ const updateSession = async (req, res) => {
     averageVote = (totalVotes / voteList.length).toFixed(1);
   }
 
-  // outputs the most frequent item and its frequency
-  console.log(majorityVote + " ( " + mf + " times ) ");
-  console.log("Total count:", totalVotes);
-  console.log("Majority vote:", majorityVote);
-  console.log("Average vote:", averageVote);
-
   try {
     const updatedSession = await Session.findOneAndUpdate(
       { _id: sessionID },
@@ -131,8 +117,7 @@ const addUserToSession = async (req, res) => {
   const userID = new Mongoose.Types.ObjectId();
   const participantArrayID = new Mongoose.Types.ObjectId();
   const voteArrayID = new Mongoose.Types.ObjectId();
-  console.log("user added to session");
-  console.log("session id:", sessionID);
+  console.log(`user ${userID} added to session`);
 
   try {
     const session = await Session.findById(sessionID);
@@ -166,14 +151,13 @@ const addUserToSession = async (req, res) => {
       voteArrayID: voteArrayID,
     });
   } catch (error) {
+    res.status(500).json({ message: error.message });
     console.log(error);
-    res.status(500).json({ message: "Server error" });
   }
 };
 
 const removeUserFromSession = async (req, res) => {
   const { sessionID, userID, participantList, voteList } = req.body;
-  console.log("Participant list:", participantList);
 
   // removes user from participant and vote lists through the array.filter() method
   const updatedParticipantList = participantList.filter(
@@ -198,7 +182,6 @@ const removeUserFromSession = async (req, res) => {
 };
 
 const updateUserHasVoted = async (req, res) => {
-  console.log("this route being called");
   const { sessionID, userID, userVote, voteList } = req.body;
   const updatedVoteList = voteList.map((voter) => {
     if (voter.userID === userID) {
@@ -211,8 +194,6 @@ const updateUserHasVoted = async (req, res) => {
       return voter;
     }
   });
-  console.log("old vote list:", voteList);
-  console.log("updated vote list:", updatedVoteList);
 
   // updates session with user vote
   try {

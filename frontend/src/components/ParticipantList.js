@@ -7,7 +7,6 @@ import ListItemText from "@mui/material/ListItemText";
 
 function ParticipantList({ voteList, showVotes, userID, onKick }) {
   const handleClick = (kickedUserID) => {
-    console.log("kicking user:", kickedUserID);
     onKick(kickedUserID);
   };
 

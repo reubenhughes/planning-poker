@@ -253,5 +253,5 @@ header a {
 }
 
 .not-found h2 {
-  color: var(--text-color)
+  color: var(--text-color);
 }
