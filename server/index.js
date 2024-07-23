@@ -11,33 +11,34 @@ const app = express();
 // routes
 const sessionRoutes = require("./routes/sessions");
 
-app.use(cors(
-    {
-        origin: ["https://planning-poker-frontend-nu.vercel.app"],
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        credentials: true
-    }
-));
+const allowedOrigins = ["https://planning-poker-frontend-nu.vercel.app"];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use("/api/sessions", sessionRoutes);
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://planning-poker-frontend-nu.vercel.app");
-    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
-    next();
-  });
+  res.header("Access-Control-Allow-Origin", allowedOrigins.join(','));
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 app.get("/", (req, res) => {
-    res.send("Server is running");
-  });
+  res.send("Server is running");
+});
 
 // creates the server
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://planning-poker-frontend-nu.vercel.app"],
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -79,4 +80,6 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
   server.listen(3001, () => {
     console.log("Connected to database and listening on port 3001.");
   });
+}).catch(err => {
+  console.error('Database connection error:', err);
 });

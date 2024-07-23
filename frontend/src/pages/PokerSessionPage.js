@@ -12,7 +12,9 @@ import LeaveSessionButton from "../components/LeaveSessionButton";
 import ParticipantList from "../components/ParticipantList";
 import VoteButtonGroup from "../components/VoteButtonGroup";
 
-const socket = io.connect("https://planning-poker-server-seven.vercel.app");
+const socket = io.connect("https://planning-poker-server-seven.vercel.app", {
+    withCredentials: true
+  });
 
 function PokerSessionPage() {
   const navigate = useNavigate();
