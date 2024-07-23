@@ -14,7 +14,7 @@ const sessionRoutes = require("./routes/sessions");
 app.use(cors(
     {
         origin: ["https://planning-poker-frontend-nu.vercel.app"],
-        methods: ["POST", "GET"],
+        methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true
     }
 ));
