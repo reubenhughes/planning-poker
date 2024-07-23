@@ -12,7 +12,7 @@ import LeaveSessionButton from "../components/LeaveSessionButton";
 import ParticipantList from "../components/ParticipantList";
 import VoteButtonGroup from "../components/VoteButtonGroup";
 
-const socket = io.connect("planning-poker-server-seven.vercel.app");
+const socket = io.connect("https://planning-poker-server-seven.vercel.app-seven.vercel.app");
 
 function PokerSessionPage() {
   const navigate = useNavigate();
@@ -92,7 +92,7 @@ function PokerSessionPage() {
     const handleRefresh = async () => {
       setShowVotes(true);
       const response = await fetch(
-        `planning-poker-server-seven.vercel.app/api/sessions/${room}`,
+        `https://planning-poker-server-seven.vercel.app-seven.vercel.app/api/sessions/${room}`,
       );
       const json = await response.json();
 
@@ -172,7 +172,7 @@ function PokerSessionPage() {
   // sends web socket messages on actions from the user
   const handleJoin = async ({ name, role }) => {
     const response = await fetch(
-      `planning-poker-server-seven.vercel.app/api/sessions/${room}/addUser`,
+      `https://planning-poker-server-seven.vercel.app-seven.vercel.app/api/sessions/${room}/addUser`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -232,7 +232,7 @@ function PokerSessionPage() {
 
   const handleLeave = async () => {
     const response = await fetch(
-      `planning-poker-server-seven.vercel.app/api/sessions/${room}/removeUser`,
+      `https://planning-poker-server-seven.vercel.app-seven.vercel.app/api/sessions/${room}/removeUser`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -260,7 +260,7 @@ function PokerSessionPage() {
     if (!userVoted) {
       setUserVoted(true);
       const response = await fetch(
-        `planning-poker-server-seven.vercel.app/api/sessions/${room}/updateUserHasVoted`,
+        `https://planning-poker-server-seven.vercel.app-seven.vercel.app/api/sessions/${room}/updateUserHasVoted`,
         {
           method: "PATCH",
           body: JSON.stringify({ sessionID: room, userID, userVote, voteList }),
@@ -290,7 +290,7 @@ function PokerSessionPage() {
       );
     } else {
       const response = await fetch(
-        `planning-poker-server-seven.vercel.app/api/sessions/${room}/updateUserHasVoted`,
+        `https://planning-poker-server-seven.vercel.app-seven.vercel.app/api/sessions/${room}/updateUserHasVoted`,
         {
           method: "PATCH",
           body: JSON.stringify({ sessionID: room, userID, userVote, voteList }),
@@ -320,7 +320,7 @@ function PokerSessionPage() {
   };
 
   const handleRefresh = async () => {
-    const response = await fetch(`planning-poker-server-seven.vercel.app/api/sessions/${room}`);
+    const response = await fetch(`https://planning-poker-server-seven.vercel.app-seven.vercel.app/api/sessions/${room}`);
     const json = await response.json();
     if (response.ok) {
       setParticipantList(
@@ -351,7 +351,7 @@ function PokerSessionPage() {
   const handleShowVotes = async () => {
     setShowVotes(true);
     const response = await fetch(
-      `planning-poker-server-seven.vercel.app/api/sessions/${room}/updateSession`,
+      `https://planning-poker-server-seven.vercel.app-seven.vercel.app/api/sessions/${room}/updateSession`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -374,7 +374,7 @@ function PokerSessionPage() {
 
   const handleResetVotes = async () => {
     const response = await fetch(
-      `planning-poker-server-seven.vercel.app/api/sessions/${room}/clearVotes`,
+      `https://planning-poker-server-seven.vercel.app-seven.vercel.app/api/sessions/${room}/clearVotes`,
       {
         method: "PATCH",
         body: JSON.stringify({ sessionID: room, voteList }),
@@ -403,7 +403,7 @@ function PokerSessionPage() {
 
   const handleKick = async (kickedUserID) => {
     const response = await fetch(
-      `planning-poker-server-seven.vercel.app/api/sessions/${room}/removeUser`,
+      `https://planning-poker-server-seven.vercel.app-seven.vercel.app/api/sessions/${room}/removeUser`,
       {
         method: "PATCH",
         body: JSON.stringify({
