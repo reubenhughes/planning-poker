@@ -33,7 +33,7 @@ function CreateSessionPage() {
       status: "voting",
       majorityVote: 0,
       averageVote: 0,
-      createdAt: Date.now,
+      createdAt: Date.now(),
     };
 
     const response = await fetch("https://planning-poker-server-seven.vercel.app/api/sessions/", {
