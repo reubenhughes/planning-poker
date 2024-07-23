@@ -39,6 +39,7 @@ const io = new Server(server, {
   cors: {
     origin: ["https://planning-poker-frontend-nu.vercel.app"],
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
