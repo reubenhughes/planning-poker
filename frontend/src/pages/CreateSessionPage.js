@@ -36,7 +36,7 @@ function CreateSessionPage() {
       createdAt: Date.now,
     };
 
-    const response = await fetch("planning-poker-server-seven.vercel.app/api/sessions/", {
+    const response = await fetch("https://planning-poker-server-seven.vercel.app/api/sessions/", {
       method: "POST",
       body: JSON.stringify(session),
       headers: {
