@@ -19,7 +19,7 @@ app.use("/api/sessions", sessionRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://planning-poker-frontend-nu.vercel.app"],
+    origin: ["planning-poker-frontend-nu.vercel.app"],
     methods: ["GET", "POST"],
   },
 });
