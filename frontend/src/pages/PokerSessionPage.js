@@ -198,7 +198,7 @@ function PokerSessionPage() {
       setUserRole(role);
       setVoteDeck(json.session.voteDeck);
       setSessionStatus(json.session.status);
-      if (role === "Observer" && json.session.status === "finished") {
+      if (role === "observer" && json.session.status === "finished") {
         setShowVotes(true);
       }
       setParticipantList(
