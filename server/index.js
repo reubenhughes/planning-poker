@@ -15,7 +15,7 @@ const allowedOrigins = ["https://planning-poker-frontend-nu.vercel.app"];
 
 app.use(cors({
   origin: allowedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true
 }));
 
@@ -24,7 +24,7 @@ app.use("/api/sessions", sessionRoutes);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", allowedOrigins.join(','));
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
   next();
