@@ -12,9 +12,9 @@ import LeaveSessionButton from "../components/LeaveSessionButton";
 import ParticipantList from "../components/ParticipantList";
 import VoteButtonGroup from "../components/VoteButtonGroup";
 
-const socket = io.connect("https://planning-poker-server-seven.vercel.app", {
-    withCredentials: true
-  });
+//const socket = io.connect("https://planning-poker-server-seven.vercel.app", {
+  //  withCredentials: true
+  //});
 
 function PokerSessionPage() {
   const navigate = useNavigate();
@@ -153,21 +153,21 @@ function PokerSessionPage() {
       }
     };
 
-    socket.on("user_joined", handleUserJoined);
-    socket.on("user_left", handleUserLeft);
-    socket.on("user_voted", handleUserVoted);
-    socket.on("votes_shown", handleRefresh);
-    socket.on("votes_reset", handleVotesReset);
-    socket.on("user_kicked", handleUserKicked);
+    //socket.on("user_joined", handleUserJoined);
+    //socket.on("user_left", handleUserLeft);
+    //socket.on("user_voted", handleUserVoted);
+    //socket.on("votes_shown", handleRefresh);
+    //socket.on("votes_reset", handleVotesReset);
+    //socket.on("user_kicked", handleUserKicked);
 
     // cleans up sockets after disconnect
     return () => {
-      socket.off("user_joined", handleUserJoined);
-      socket.off("user_left", handleUserLeft);
-      socket.off("user_voted", handleUserVoted);
-      socket.off("votes_shown", handleRefresh);
-      socket.off("votes_reset", handleVotesReset);
-      socket.off("user_kicked", handleUserKicked);
+      //socket.off("user_joined", handleUserJoined);
+      //socket.off("user_left", handleUserLeft);
+      //socket.off("user_voted", handleUserVoted);
+      //socket.off("votes_shown", handleRefresh);
+      //socket.off("votes_reset", handleVotesReset);
+      //socket.off("user_kicked", handleUserKicked);
     };
   }, [navigate, room, userID, voteList]);
 
@@ -219,14 +219,14 @@ function PokerSessionPage() {
         })),
       );
 
-      socket.emit("join_room", {
-        room,
-        name,
-        role,
-        participantID: json.participantArrayID,
-        voteID: json.voteArrayID,
-        userID: json.userID,
-      });
+      //socket.emit("join_room", {
+        //room,
+        //name,
+        //role,
+        //participantID: json.participantArrayID,
+        //voteID: json.voteArrayID,
+        //userID: json.userID,
+      //});
     } else {
       console.error("Failed to join session: ", json);
     }
@@ -251,7 +251,7 @@ function PokerSessionPage() {
     const json = await response.json();
 
     if (response.ok) {
-      socket.emit("leave_room", { room, userID, username, userRole });
+      //socket.emit("leave_room", { room, userID, username, userRole });
       navigate("/");
     } else {
       console.error("Failed to leave session ", json);
@@ -318,7 +318,7 @@ function PokerSessionPage() {
       );
     }
     setVote(userVote);
-    socket.emit("select_vote", { room, userID, vote: userVote });
+    //socket.emit("select_vote", { room, userID, vote: userVote });
   };
 
   const handleRefresh = async () => {
@@ -367,7 +367,7 @@ function PokerSessionPage() {
     );
     await response.json();
     if (response.ok) {
-      socket.emit("show_votes", { room });
+      //socket.emit("show_votes", { room });
       handleRefresh();
     } else {
       console.error("Failed to update session");
@@ -400,7 +400,7 @@ function PokerSessionPage() {
     setShowVotes(false);
     setSessionStatus("voting");
     setVote("0");
-    socket.emit("reset_votes", { room });
+    //socket.emit("reset_votes", { room });
   };
 
   const handleKick = async (kickedUserID) => {
@@ -430,7 +430,7 @@ function PokerSessionPage() {
 
     if (response.ok) {
       console.log("Kicked user");
-      socket.emit("kick_user", { room, userID: kickedUserID });
+      //socket.emit("kick_user", { room, userID: kickedUserID });
     } else {
       console.error("Failed to kick user ", json);
     }
