@@ -351,6 +351,7 @@ function PokerSessionPage() {
   };
 
   const handleShowVotes = async () => {
+    reloadDatabase();
     setShowVotes(true);
     const response = await fetch(
       `https://planning-poker-server-seven.vercel.app/api/sessions/${room}/updateSession`,
