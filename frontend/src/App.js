@@ -6,7 +6,6 @@ import HomePage from "./pages/HomePage";
 import PokerSessionPage from "./pages/PokerSessionPage";
 import CreateSessionPage from "./pages/CreateSessionPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import AblyTestPage from "./pages/AblyTestPage"
 import NavBar from "./components/NavBar";
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/session/:room" element={<PokerSessionPage />} />
             <Route path="/create-session" element={<CreateSessionPage />} />
-            <Route path="/ably" element={<AblyTestPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

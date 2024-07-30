@@ -11,75 +11,16 @@ const app = express();
 // routes
 const sessionRoutes = require("./routes/sessions");
 
-//const allowedOrigins = ["https://planning-poker-frontend-nu.vercel.app"];
-
-//app.use(cors({
-  //origin: allowedOrigins,
-  //methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  //credentials: true
-//}));
-
 app.use(cors())
 app.use(express.json());
 app.use("/api/sessions", sessionRoutes);
-
-//app.use((req, res, next) => {
-  //res.header("Access-Control-Allow-Origin", allowedOrigins.join(','));
-  //res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
-  //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  //res.header("Access-Control-Allow-Credentials", "true");
-  //next();
-//});
 
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
-// creates the server
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    //origin: allowedOrigins,
-    origin: "https://planning-poker-frontend-nu.vercel.app",
-    methods: ["GET", "POST"],
-    //credentials: true,
-  },
-});
-
-// handles web socket messages
-io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
-
-  socket.on("join_room", (data) => {
-    socket.join(data.room);
-    console.log(`User ${data.name} joined room: ${data.room}`);
-    socket.to(data.room).emit("user_joined", data);
-  });
-  socket.on("select_vote", (data) => {
-    console.log(`User ${data.userID} has voted`);
-    socket.to(data.room).emit("user_voted", data);
-  });
-  socket.on("leave_room", (data) => {
-    console.log(`User ${data.username} left room: ${data.room}`);
-    socket.to(data.room).emit("user_left", data);
-    socket.leave(data.room);
-  });
-  socket.on("show_votes", (data) => {
-    console.log("Showing votes");
-    socket.to(data.room).emit("votes_shown");
-  });
-  socket.on("reset_votes", (data) => {
-    console.log("Resetting votes");
-    socket.to(data.room).emit("votes_reset");
-  });
-  socket.on("kick_user", (data) => {
-    console.log("Kicking user");
-    socket.to(data.room).emit("user_kicked", data);
-  });
-});
-
 mongoose.connect(process.env.MONGO_URI).then(() => {
-  server.listen(3001, () => {
+  app.listen(3001, () => {
     console.log("Connected to database and listening on port 3001.");
   });
 }).catch(err => {
