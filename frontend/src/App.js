@@ -6,7 +6,7 @@ import HomePage from "./pages/HomePage";
 import PokerSessionPage from "./pages/PokerSessionPage";
 import CreateSessionPage from "./pages/CreateSessionPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import Ably from "./pages/AblyTestPage"
+import AblyTestPage from "./pages/AblyTestPage"
 import NavBar from "./components/NavBar";
 
 function App() {
