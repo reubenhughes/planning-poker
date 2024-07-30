@@ -438,7 +438,7 @@ function PokerSessionPage() {
 
   const reloadDatabase = async () => {
     const response = await fetch(
-        `http://localhost:3001/api/sessions/${room}`,
+        `https://planning-poker-server-seven.vercel.app/api/sessions/${room}`,
         {
           method: "GET",
           headers: {
