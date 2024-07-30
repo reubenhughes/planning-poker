@@ -351,9 +351,45 @@ function PokerSessionPage() {
   };
 
   const handleShowVotes = async () => {
-    reloadDatabase();
-    setShowVotes(true);
     const response = await fetch(
+        `https://planning-poker-server-seven.vercel.app/api/sessions/${room}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      const json = await response.json();
+  
+      if (response.ok) {
+        setSession(json);
+        setSessionStatus(json.status);
+        if (json.status === "finished") {
+          setShowVotes(true);
+        }
+        setParticipantList(
+          json.participants.map((participant) => ({
+            id: participant._id,
+            userID: participant.userID,
+            name: participant.name,
+            role: participant.role,
+          })),
+        );
+        setVoteList(
+          json.votes.map((voter) => ({
+            id: voter._id,
+            userID: voter.userID,
+            name: voter.name,
+            vote: voter.vote,
+            voteMessage: voter.voteMessage,
+          })),
+        );
+      } else {
+        console.error("Failed to join session: ", json);
+      }
+    setShowVotes(true);
+    const response2 = await fetch(
       `https://planning-poker-server-seven.vercel.app/api/sessions/${room}/updateSession`,
       {
         method: "PATCH",
@@ -366,8 +402,8 @@ function PokerSessionPage() {
         headers: { "Content-Type": "application/json" },
       },
     );
-    await response.json();
-    if (response.ok) {
+    await response2.json();
+    if (response2.ok) {
       //socket.emit("show_votes", { room });
       handleRefresh();
     } else {
