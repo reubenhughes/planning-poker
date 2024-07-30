@@ -36,13 +36,16 @@ function CreateSessionPage() {
       createdAt: Date.now(),
     };
 
-    const response = await fetch("https://planning-poker-server-seven.vercel.app/api/sessions/", {
-      method: "POST",
-      body: JSON.stringify(session),
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://planning-poker-server-seven.vercel.app/api/sessions/",
+      {
+        method: "POST",
+        body: JSON.stringify(session),
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
     const json = await response.json();
 
     if (response.ok) {

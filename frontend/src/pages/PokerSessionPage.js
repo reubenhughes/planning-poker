@@ -1,5 +1,4 @@
-import io from "socket.io-client";
-import { Realtime } from 'ably'
+import { Realtime } from "ably";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -13,12 +12,15 @@ import LeaveSessionButton from "../components/LeaveSessionButton";
 import ParticipantList from "../components/ParticipantList";
 import VoteButtonGroup from "../components/VoteButtonGroup";
 
-const ably = new Realtime({ key: '6IU7TA.IELGww:d-oIjlDQosW33FkgLwAe7e8CMxs-U6-KlT7jfbaflRg', echoMessages: false });
+const ably = new Realtime({
+  key: "6IU7TA.IELGww:d-oIjlDQosW33FkgLwAe7e8CMxs-U6-KlT7jfbaflRg",
+  echoMessages: false,
+});
 
 function PokerSessionPage() {
   const navigate = useNavigate();
   const { room } = useParams();
-  const channel = ably.channels.get(`planning-poker-${room}`)
+  const channel = ably.channels.get(`planning-poker-${room}`);
 
   // user variables
   const [userID, setUserID] = useState("");
@@ -153,23 +155,23 @@ function PokerSessionPage() {
       }
     };
 
-    channel.subscribe('join_room', handleUserJoined)
-    channel.subscribe('leave_room', handleUserLeft)
-    channel.subscribe('select_vote', handleUserVoted)
-    channel.subscribe('show_votes', handleRefresh)
-    channel.subscribe('reset_votes', handleVotesReset)
-    channel.subscribe('kick_user', handleUserKicked)
+    channel.subscribe("join_room", handleUserJoined);
+    channel.subscribe("leave_room", handleUserLeft);
+    channel.subscribe("select_vote", handleUserVoted);
+    channel.subscribe("show_votes", handleRefresh);
+    channel.subscribe("reset_votes", handleVotesReset);
+    channel.subscribe("kick_user", handleUserKicked);
 
     // cleans up sockets after disconnect
     return () => {
-      channel.unsubscribe('join_room', handleUserJoined)
-      channel.unsubscribe('leave_room', handleUserLeft)
-    channel.unsubscribe('select_vote', handleUserVoted)
-    channel.unsubscribe('show_votes', handleRefresh)
-    channel.unsubscribe('reset_votes', handleVotesReset)
-    channel.unsubscribe('kick_user', handleUserKicked)
+      channel.unsubscribe("join_room", handleUserJoined);
+      channel.unsubscribe("leave_room", handleUserLeft);
+      channel.unsubscribe("select_vote", handleUserVoted);
+      channel.unsubscribe("show_votes", handleRefresh);
+      channel.unsubscribe("reset_votes", handleVotesReset);
+      channel.unsubscribe("kick_user", handleUserKicked);
     };
-  }, [navigate, room, userID, voteList]);
+  }, [navigate, channel, room, userID, voteList]);
 
   // sends web socket messages on actions from the user
   const handleJoin = async ({ name, role }) => {
@@ -219,14 +221,14 @@ function PokerSessionPage() {
         })),
       );
 
-      channel.publish('join_room', { 
+      channel.publish("join_room", {
         room,
         name,
         role,
         participantID: json.participantArrayID,
         voteID: json.voteArrayID,
-        userID: json.userID
-        })
+        userID: json.userID,
+      });
     } else {
       console.error("Failed to join session: ", json);
     }
@@ -318,11 +320,13 @@ function PokerSessionPage() {
       );
     }
     setVote(userVote);
-    channel.publish('select_vote', { room, userID, vote: userVote })
+    channel.publish("select_vote", { room, userID, vote: userVote });
   };
 
   const handleRefresh = async () => {
-    const response = await fetch(`https://planning-poker-server-seven.vercel.app/api/sessions/${room}`);
+    const response = await fetch(
+      `https://planning-poker-server-seven.vercel.app/api/sessions/${room}`,
+    );
     const json = await response.json();
     if (response.ok) {
       setParticipantList(
@@ -367,7 +371,7 @@ function PokerSessionPage() {
     );
     await response.json();
     if (response.ok) {
-      channel.publish('show_votes', { room })
+      channel.publish("show_votes", { room });
       handleRefresh();
     } else {
       console.error("Failed to update session");
@@ -400,7 +404,7 @@ function PokerSessionPage() {
     setShowVotes(false);
     setSessionStatus("voting");
     setVote("0");
-    channel.publish('reset_votes', { room })
+    channel.publish("reset_votes", { room });
   };
 
   const handleKick = async (kickedUserID) => {
@@ -430,7 +434,7 @@ function PokerSessionPage() {
 
     if (response.ok) {
       console.log("Kicked user");
-      channel.publish('kick_user', { room, userID: kickedUserID })
+      channel.publish("kick_user", { room, userID: kickedUserID });
     } else {
       console.error("Failed to kick user ", json);
     }
