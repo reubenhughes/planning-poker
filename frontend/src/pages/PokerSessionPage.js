@@ -436,6 +436,46 @@ function PokerSessionPage() {
     }
   };
 
+  const reloadDatabase = async () => {
+    const response = await fetch(
+        `http://localhost:3001/api/sessions/${room}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      const json = await response.json();
+  
+      if (response.ok) {
+        setSession(json);
+        setSessionStatus(json.status);
+        if (json.status === "finished") {
+          setShowVotes(true);
+        }
+        setParticipantList(
+          json.participants.map((participant) => ({
+            id: participant._id,
+            userID: participant.userID,
+            name: participant.name,
+            role: participant.role,
+          })),
+        );
+        setVoteList(
+          json.votes.map((voter) => ({
+            id: voter._id,
+            userID: voter.userID,
+            name: voter.name,
+            vote: voter.vote,
+            voteMessage: voter.voteMessage,
+          })),
+        );
+      } else {
+        console.error("Failed to join session: ", json);
+      }
+  }
+
   return (
     <div className="poker-session">
       <NameForm onJoin={handleJoin} />
@@ -469,6 +509,7 @@ function PokerSessionPage() {
       </div>
       <div className="participant-list">
         <h3>Participants in session</h3>
+        <button onClick={reloadDatabase}>Reload</button>
         <ParticipantList
           voteList={voteList}
           showVotes={showVotes}
