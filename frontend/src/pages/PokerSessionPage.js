@@ -13,7 +13,7 @@ import ParticipantList from "../components/ParticipantList";
 import VoteButtonGroup from "../components/VoteButtonGroup";
 
 const ably = new Realtime({
-  key: ABLY_API_KEY,
+  key: "6IU7TA.IELGww:d-oIjlDQosW33FkgLwAe7e8CMxs-U6-KlT7jfbaflRg",
   echoMessages: false,
 });
 
