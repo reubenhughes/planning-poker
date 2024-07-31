@@ -1,3 +1,5 @@
+import "dotenv";
+
 import { Realtime } from "ably";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -13,7 +15,7 @@ import ParticipantList from "../components/ParticipantList";
 import VoteButtonGroup from "../components/VoteButtonGroup";
 
 const ably = new Realtime({
-  key: ABLY_API_KEY,
+  key: process.env.ABLY_API_KEY,
   echoMessages: false,
 });
 
