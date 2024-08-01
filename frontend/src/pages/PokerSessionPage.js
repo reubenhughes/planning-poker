@@ -355,7 +355,6 @@ function PokerSessionPage() {
   };
 
   const handleShowVotes = async () => {
-    setShowVotes(true);
     const response = await fetch(
       `https://planning-poker-server-seven.vercel.app/api/sessions/${room}/updateSession`,
       {
@@ -371,6 +370,7 @@ function PokerSessionPage() {
     );
     await response.json();
     if (response.ok) {
+      setShowVotes(true);
       channel.publish("show_votes", { room });
       handleRefresh();
     } else {
