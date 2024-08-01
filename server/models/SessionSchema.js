@@ -29,6 +29,21 @@ const voteSchema = new mongoose.Schema({
   },
 });
 
+const storySchema = new mongoose.Schema({
+    title: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+    number: {
+        type: Number
+    },
+    storyLink: {
+        type: String
+    }
+})
+
 const SessionSchema = new Schema({
   participants: [participantSchema],
   votes: [voteSchema],
