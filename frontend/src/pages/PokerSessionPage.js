@@ -32,7 +32,6 @@ function PokerSessionPage() {
   // session variables
   const [participantList, setParticipantList] = useState([]);
   const [session, setSession] = useState("");
-  const [sessionStatus, setSessionStatus] = useState("");
   const [showVotes, setShowVotes] = useState(false);
   const [voteDeck, setVoteDeck] = useState([]);
   const [voteList, setVoteList] = useState([]);
@@ -60,7 +59,6 @@ function PokerSessionPage() {
             voteMessage: "Participant has not voted",
           },
         ]);
-        setShowVotes(false);
       }
     };
 
@@ -94,7 +92,6 @@ function PokerSessionPage() {
     };
 
     const handleRefresh = async () => {
-      setShowVotes(true);
       const response = await fetch(
         `https://planning-poker-server-seven.vercel.app/api/sessions/${room}`,
       );
@@ -119,7 +116,7 @@ function PokerSessionPage() {
           })),
         );
         setSession(json);
-        setSessionStatus(json.status);
+        setShowVotes(true);
       } else {
         console.error("Failed to fetch session");
       }
@@ -135,7 +132,6 @@ function PokerSessionPage() {
       );
       setShowVotes(false);
       setUserVoted(false);
-      setSessionStatus("voting");
       setVote("0");
     };
 
@@ -199,8 +195,7 @@ function PokerSessionPage() {
       setUsername(name);
       setUserRole(role);
       setVoteDeck(json.session.voteDeck);
-      setSessionStatus(json.session.status);
-      if (role === "observer" && json.session.status === "finished") {
+      if (json.session.status === "finished") {
         setShowVotes(true);
       }
       setParticipantList(
@@ -348,7 +343,7 @@ function PokerSessionPage() {
         })),
       );
       setSession(json);
-      setSessionStatus(json.status);
+      setShowVotes(true);
     } else {
       console.error("Failed to refresh session");
     }
@@ -370,7 +365,6 @@ function PokerSessionPage() {
     );
     await response.json();
     if (response.ok) {
-      setShowVotes(true);
       channel.publish("show_votes", { room });
       handleRefresh();
     } else {
@@ -387,7 +381,7 @@ function PokerSessionPage() {
         headers: { "Content-Type": "application/json" },
       },
     );
-    await response.json();
+    const json = await response.json();
     if (response.ok) {
     } else {
       console.error("Failed to clear votes");
@@ -402,7 +396,7 @@ function PokerSessionPage() {
     );
     setUserVoted(false);
     setShowVotes(false);
-    setSessionStatus("voting");
+    setSession(json)
     setVote("0");
     channel.publish("reset_votes", { room });
   };
@@ -448,7 +442,7 @@ function PokerSessionPage() {
         <h4>Description:</h4>
         <h5>{session.description}</h5>
         <Divider variant="middle" />
-        <h4>Status: {sessionStatus}</h4>
+        <h4>Status: {session.status}</h4>
         <LeaveSessionButton leaveSession={handleLeave}></LeaveSessionButton>
       </div>
       <div className="user-info">
@@ -507,6 +501,8 @@ function PokerSessionPage() {
           <>
             <h4>Majority vote: {session.majorityVote}</h4>
             <h4>Average vote: {session.averageVote}</h4>
+            <h4>Highest vote: {session.highestVote}</h4>
+            <h4>Lowest vote: {session.lowestVote}</h4>
           </>
         ) : (
           <>

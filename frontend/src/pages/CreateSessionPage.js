@@ -33,6 +33,8 @@ function CreateSessionPage() {
       status: "voting",
       majorityVote: 0,
       averageVote: 0,
+      highestVote: 0,
+      lowestVote: 0,
       createdAt: Date.now(),
     };
 

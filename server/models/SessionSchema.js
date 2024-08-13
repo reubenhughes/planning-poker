@@ -66,6 +66,12 @@ const SessionSchema = new Schema({
   averageVote: {
     type: Number,
   },
+  highestVote: {
+    type: Number,
+  },
+  lowestVote: {
+    type: Number,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
