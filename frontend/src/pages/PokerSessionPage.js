@@ -501,8 +501,6 @@ function PokerSessionPage() {
           <>
             <h4>Majority vote: {session.majorityVote}</h4>
             <h4>Average vote: {session.averageVote}</h4>
-            <h4>Highest vote: {session.highestVote}</h4>
-            <h4>Lowest vote: {session.lowestVote}</h4>
           </>
         ) : (
           <>
