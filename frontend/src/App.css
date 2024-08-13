@@ -198,6 +198,12 @@ header a {
   margin: 5px;
 }
 
+.vote-buttons Button:focus {
+  /*background: #7f99f0;*/
+  background: var(--primary);
+  color: var(--text-color);
+}
+
 .create-session {
   display: grid;
   grid-template-columns: 1fr 2fr;

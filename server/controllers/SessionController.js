@@ -57,6 +57,8 @@ const updateSession = async (req, res) => {
   let totalVotes = 0;
   let mf = 1;
   let m = 0;
+  let h = 0;
+  let l = 0;
 
   const voteList = oldVoteList
     .filter((voter) => voter.vote != "0" && voter.vote != "?")
@@ -79,8 +81,15 @@ const updateSession = async (req, res) => {
         majorityVote = voteList[i];
       }
     }
-    if (voteList[i] != "0" && voteList[i] != "?") {
       totalVotes += Number(voteList[i]);
+    if (i === 0) {
+        l = voteList[i]
+    }
+    if (voteList[i] > h) {
+        h = voteList[i]
+    }
+    else if (voteList[i] < l) {
+        l = voteList[i]
     }
     // resets the current item's frequency for the next iteration
     m = 0;
