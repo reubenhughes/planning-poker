@@ -28,8 +28,6 @@ const createSession = async (req, res) => {
     status,
     majorityVote,
     averageVote,
-    highestVote,
-    lowestVote,
     createdAt,
   } = req.body;
   try {
@@ -42,8 +40,6 @@ const createSession = async (req, res) => {
       status,
       majorityVote,
       averageVote,
-      highestVote,
-      lowestVote,
       createdAt,
     });
     res.status(200).json(session);
@@ -105,10 +101,6 @@ const updateSession = async (req, res) => {
     averageVote = (totalVotes / voteList.length).toFixed(1);
   }
 
-  console.log("total votes:", totalVotes)
-  console.log("highest:", h)
-  console.log("lowest:", l)
-
   try {
     const updatedSession = await Session.findOneAndUpdate(
       { _id: sessionID },
@@ -118,8 +110,6 @@ const updateSession = async (req, res) => {
         status: "finished",
         majorityVote: majorityVote,
         averageVote: averageVote,
-        highestVote: h,
-        lowestVote: l,
         createdAt: session.createdAt,
       },
       { new: true },
